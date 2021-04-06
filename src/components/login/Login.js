@@ -7,11 +7,13 @@ import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 
 const FormContainer = styled.div`
+  background: rgb(241,117,117);
   margin-top: 2em;
   display: flex;
+
   flex-direction: column;
   align-items: center;
-  min-height: 300px;
+  min-height: 400px;
   justify-content: center;
 `;
 
@@ -19,14 +21,15 @@ const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 60%;
-  height: 375px;
+  width: 800px;
+  height:700px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
   padding-right: 37px;
-  border-radius: 5px;
-  background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
+  border-radius: 80px;
+  background: rgb(29, 26, 26);
+  align-items:center;
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -35,13 +38,14 @@ const InputField = styled.input`
     color: rgba(255, 255, 255, 1.0);
   }
   height: 35px;
+  width:100%;
   padding-left: 15px;
   margin-left: -4px;
   border: none;
   border-radius: 20px;
   margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: rgb(246, 240, 240);
+  color: rgb(29, 26, 26);
 `;
 
 const Label = styled.label`
@@ -50,10 +54,37 @@ const Label = styled.label`
   text-transform: uppercase;
 `;
 
-const ButtonContainer = styled.div`
+
+const ForgotPwdLabel = styled.div`
+  color: white;
+  margin-bottom: 10px;
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+`;
+
+const LoginLabel = styled.div`
+  color: white;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  font-size: 30px;
+
+`;
+
+const InputContainer = styled.div`
+  width:50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+`;
+
+const ButtonContainer = styled.div`
+  width:100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 /**
@@ -78,6 +109,12 @@ class Login extends React.Component {
       name: null,
       username: null
     };
+    this.routeChange = this.routeChange.bind(this);
+  }
+
+  routeChange() {
+    let path = `/register`;
+    this.props.history.push(path);
   }
   /**
    * HTTP POST request is sent to the backend.
@@ -127,37 +164,41 @@ class Login extends React.Component {
 
   render() {
     return (
-      <BaseContainer>
-        <FormContainer>
-          <Form>
-            <Label>Username</Label>
-            <InputField
-              placeholder="Enter here.."
-              onChange={e => {
-                this.handleInputChange('username', e.target.value);
-              }}
-            />
-            <Label>Name</Label>
-            <InputField
-              placeholder="Enter here.."
-              onChange={e => {
-                this.handleInputChange('name', e.target.value);
-              }}
-            />
-            <ButtonContainer>
-              <Button
-                disabled={!this.state.username || !this.state.name}
-                width="50%"
-                onClick={() => {
-                  this.login();
-                }}
-              >
-                Login
-              </Button>
-            </ButtonContainer>
-          </Form>
-        </FormContainer>
-      </BaseContainer>
+        <BaseContainer>
+          <FormContainer>
+            <Form>
+              <InputContainer>
+                <LoginLabel>LOGIN</LoginLabel>
+                <Label>Username:</Label>
+                <InputField
+                    onChange={e => {
+                      this.handleInputChange('username', e.target.value);
+                    }}
+                />
+                <Label>Password:</Label>
+                <InputField
+                    onChange={e => {
+                      this.handleInputChange('name', e.target.value);
+                    }}
+                />
+              </InputContainer>
+              <ForgotPwdLabel>FORGOT PASSWORD?</ForgotPwdLabel>
+              <ButtonContainer>
+                <Button
+                    disabled={!this.state.username || !this.state.name}
+                    onClick={() => {
+                      this.login();
+                    }}
+                >
+                  Login
+                </Button >
+                <Button onClick={this.routeChange}>
+                  Create new Account
+                </Button>
+              </ButtonContainer>
+            </Form>
+          </FormContainer>
+        </BaseContainer>
     );
   }
 }

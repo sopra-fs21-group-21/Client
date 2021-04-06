@@ -11,11 +11,13 @@ export const Button = styled.button`
   text-align: center;
   color: rgba(255, 255, 255, 1);
   width: ${props => props.width || null};
+  width: 50%;
   height: 35px;
   border: none;
   border-radius: 20px;
   cursor: ${props => (props.disabled ? "default" : "pointer")};
   opacity: ${props => (props.disabled ? 0.4 : 1)};
-  background: rgb(16, 89, 255);
+  background: rgb(255, 173, 78);
   transition: all 0.3s ease;
+  margin-top: 20px;
 `;
