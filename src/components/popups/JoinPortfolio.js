@@ -20,8 +20,8 @@ const Popup = styled.div`
 `;
 const PopupInner = styled.div`
     position:absolute;
-    top:16px;
-    right: 16px;
+    top:300px;
+    right: 800px;
     
     padding:32px;
     width:500px;

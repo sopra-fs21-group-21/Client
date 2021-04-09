@@ -167,7 +167,7 @@ class Register extends React.Component {
 
     render() {
         return (
-            <BaseContainer>
+            <BaseContainer style = {{marginLeft:'60px'}}>
                 <FormContainer>
                     <Form>
                         <InputContainer>

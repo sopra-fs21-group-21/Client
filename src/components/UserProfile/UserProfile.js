@@ -98,7 +98,6 @@ const PortLeadCont = styled.div`
 const Label = styled.label`
   color: white;
   margin-bottom: 10px;
-  text-transform: uppercase;
 `;
 
 
@@ -173,7 +172,7 @@ const PortfoliosCont = styled.div`
 
 
 
-class DashBoard extends React.Component {
+class UserProfile extends React.Component {
 
     constructor(props) {
         super(props);
@@ -214,7 +213,7 @@ class DashBoard extends React.Component {
 
                                 this.handleButtonClick('CreatePortTrigger',true);
                             }}>
-                                    NEW PORTFOLIO
+                                NEW PORTFOLIO
                             </Button>
                             <Button style={{width:'150px'}}>
                                 VIEW MY PROFILE
@@ -235,7 +234,28 @@ class DashBoard extends React.Component {
                 <FormContainer>
                     <Form>
 
-                        <Container >
+                        <Container style={{marginBottom:'150px'}}>
+                            <div>
+                                <img width="18" alt="Green sphere" src="https://upload.wikimedia.org/wikipedia/commons/9/9b/Green_sphere.png"/>
+                                <Label>Online</Label>
+                            </div>
+                            <div style={{display:"flex", flexDirection:'row'}}>
+                                <div style={{display:"flex", flexDirection:'column'}}>
+                                    <Label style={{marginTop:'10px'}}>USERNAME: Karim31</Label>
+                                    <Label>EMAIL: kareem318199@gmail.com</Label>
+                                    <Label>CREATED: 31.08.2012</Label>
+                                </div>
+                                <ButtonContainer style={{marginLeft:'200px'}}>
+                                    <Button style={{width:'150px'}}>CHANGE USERNAME</Button>
+                                    <Button style={{width:'150px'}}>CHANGE EMAIL</Button>
+                                    <Button style={{width:'150px'}}>CHANGE PASSWORD</Button>
+                                </ButtonContainer>
+                            </div>
+
+                        </Container>
+
+
+                        <Container>
                             <Label>PORTFOLIOS</Label>
 
                             <PortLeadCont>
@@ -297,12 +317,6 @@ class DashBoard extends React.Component {
 
 
 
-                        <Container>
-                            <Label>Leaderboard</Label>
-
-                            <PortLeadCont>
-                            </PortLeadCont>
-                        </Container>
 
 
 
@@ -311,12 +325,12 @@ class DashBoard extends React.Component {
                             <InnerPopContainer>
                                 <Label style={{marginTop:'18px'}}>PORTFOLIO NAME</Label>
                                 <InputField style={{width:'90%'}}/>
-                                    <div style={{display:'flex', flexDirection: 'row',
-                                                width:'100%', justifyContent:'center',
-                                                marginBottom:"20px"}}>
-                                        <Button style={{width:'40%'}}>PRIVATE</Button>
-                                        <Button style={{width:'40%',marginLeft:'14px'}}>SHARED</Button>
-                                    </div>
+                                <div style={{display:'flex', flexDirection: 'row',
+                                    width:'100%', justifyContent:'center',
+                                    marginBottom:"20px"}}>
+                                    <Button style={{width:'40%'}}>PRIVATE</Button>
+                                    <Button style={{width:'40%',marginLeft:'14px'}}>SHARED</Button>
+                                </div>
                                 <Button>+ CREATE PORTFOLIO </Button>
                             </InnerPopContainer>
                         </CreatePortfolio>
@@ -325,9 +339,9 @@ class DashBoard extends React.Component {
 
                         <JoinPortfolio trigger={this.state.JoinPortTrigger} setTrigger={this.handleButtonClick}>
                             <InnerPopContainer>
-                            <Label>Portfolio invite code</Label>
-                            <InputField style={{width:'80%', marginTop:'12px'}}/>
-                            <Button> JOIN PORTFOLIO</Button>
+                                <Label>Portfolio invite code</Label>
+                                <InputField style={{width:'80%', marginTop:'12px'}}/>
+                                <Button> JOIN PORTFOLIO</Button>
                             </InnerPopContainer>
                         </JoinPortfolio>
 
@@ -346,4 +360,4 @@ class DashBoard extends React.Component {
  * You can get access to the history object's properties via the withRouter.
  * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
  */
-export default withRouter(DashBoard);
+export default withRouter(UserProfile);
