@@ -10,29 +10,12 @@ import CreatePortfolio from "../popups/CreatePortfolio";
 import HamburgerMenuItem from "../HamburgerMenuItem/HamburgerMenuItem";
 import DropDown from "../popups/DropDown";
 import SortingDropDown from "../popups/SortingDropDown";
-
-
-export const Button = styled.button`
-  &:hover {
-    transform: translateY(-2px);
-  }
-  padding: 6px;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 13px;
-  text-align: center;
-  color: rgba(255, 255, 255, 1);
-  width: ${props => props.width || null};
-  width: 50%;
-  height: 35px;
-  border: none;
-  border-radius: 20px;
-  cursor: ${props => (props.disabled ? "default" : "pointer")};
-  opacity: ${props => (props.disabled ? 0.4 : 1)};
-  background: rgb(255, 173, 78);
-  transition: all 0.3s ease;
-  margin-top: 10px;
-`;
+import {DropDownContainer} from "../../views/Containers/DropDownContainer";
+import {HamburgerWrapper} from "../../views/SVGS/HamburgerWrapper";
+import {BlackPopupInner} from "../../views/PopUps/BlackPopupInner";
+import {ButtonContainer} from "../../views/Containers/ButtonContainer";
+import {Button} from "../../views/design/Button";
+import {InputField} from "../../views/design/InputField";
 
 
 const FormContainer = styled.div`
@@ -48,20 +31,7 @@ const FormContainer = styled.div`
   justify-content: center;
 `;
 
-const InputField = styled.input`
-  &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
-  }
-  height: 35px;
-  width:100%;
-  padding-left: 15px;
-  margin-left: -4px;
-  border: none;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  background: rgb(246, 240, 240);
-  color: rgb(29, 26, 26);
-`;
+
 
 const Form = styled.div`
   display: flex;
@@ -111,43 +81,13 @@ const Container = styled.div`
   position: relative;
 `;
 
-const InnerPopContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-    justify-content: center;
-    align-items:center;
-
-  width:448px;
-  height:250px;
-  background: rgb(29,26,26);
-  border: none;
-  border-radius: 20px;
-  
-`;
 
 
 
 
 
 
-const ButtonContainer = styled.div`
-  width:100%;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-`;
 
-const DropDownContainer = styled.div`
-  width:200px;
-  height: 300px;
-  display: flex;
-  padding-left:1300px;
-  flex-direction: column;
-  justify-content:Center;
-  position:absolute;
-  z-index: 1;
-`;
 
 const PortFolios = styled.div`
     width:80%;
@@ -198,21 +138,21 @@ class DashBoard extends React.Component {
 
                 <DropDownContainer>
 
-                    <div style={{width:'40px', height:'40px', marginBottom:'10px', paddingLeft:'160px'}} onClick={() => {
+                    <HamburgerWrapper style={{marginLeft:'150px'}} onClick={() => {
                         this.handleButtonClick('DropDownTrigger',true); }}>
                         <HamburgerMenuItem/>
-                    </div>
+                    </HamburgerWrapper>
 
                     <DropDown trigger={this.state.DropDownTrigger} setTrigger={this.handleButtonClick}>
                         <ButtonContainer>
                             <Button style={{width:'150px'}} onClick={() => {
-                                this.handleButtonClick('JoinPortTrigger',true);
+                                this.handleButtonClick('JoinPortTrigger',!this.state.JoinPortTrigger);
                             }}>
                                 JOIN PORTFOLIO
                             </Button>
                             <Button style={{width:'150px'}} onClick={() => {
 
-                                this.handleButtonClick('CreatePortTrigger',true);
+                                this.handleButtonClick('CreatePortTrigger',!this.state.CreatePortTrigger);
                             }}>
                                     NEW PORTFOLIO
                             </Button>
@@ -239,13 +179,10 @@ class DashBoard extends React.Component {
                             <Label>PORTFOLIOS</Label>
 
                             <PortLeadCont>
-                                <div style={{width:'40px',
-                                    height:'40px',
-                                    marginBottom:'10px', marginLeft:'640px', zIndex:'1'}}
-                                     onClick={() => {
+                                <HamburgerWrapper style={{marginLeft:'640px'}} onClick={() => {
                                          this.handleButtonClick('SortingDropDownTrigger',!this.state.SortingDropDownTrigger); }}>
                                     <HamburgerMenuItem/>
-                                </div>
+                                </HamburgerWrapper>
 
                                 <SortingDropDown trigger={this.state.SortingDropDownTrigger} setTrigger={this.handleButtonClick}>
                                     <ButtonContainer>
@@ -277,8 +214,7 @@ class DashBoard extends React.Component {
 
                                 </PortfoliosCont>
 
-                                <ButtonContainer    style={{paddingTop:'120px'}}
-                                >
+                                <ButtonContainer    style={{marginTop:'120px'}}>
                                     <Button onClick={() => {
 
                                         this.handleButtonClick('CreatePortTrigger',true);
@@ -308,7 +244,7 @@ class DashBoard extends React.Component {
 
 
                         <CreatePortfolio trigger={this.state.CreatePortTrigger} setTrigger={this.handleButtonClick}>
-                            <InnerPopContainer>
+                            <BlackPopupInner>
                                 <Label style={{marginTop:'18px'}}>PORTFOLIO NAME</Label>
                                 <InputField style={{width:'90%'}}/>
                                     <div style={{display:'flex', flexDirection: 'row',
@@ -318,17 +254,17 @@ class DashBoard extends React.Component {
                                         <Button style={{width:'40%',marginLeft:'14px'}}>SHARED</Button>
                                     </div>
                                 <Button>+ CREATE PORTFOLIO </Button>
-                            </InnerPopContainer>
+                            </BlackPopupInner>
                         </CreatePortfolio>
 
 
 
                         <JoinPortfolio trigger={this.state.JoinPortTrigger} setTrigger={this.handleButtonClick}>
-                            <InnerPopContainer>
+                            <BlackPopupInner>
                             <Label>Portfolio invite code</Label>
                             <InputField style={{width:'80%', marginTop:'12px'}}/>
                             <Button> JOIN PORTFOLIO</Button>
-                            </InnerPopContainer>
+                            </BlackPopupInner>
                         </JoinPortfolio>
 
 

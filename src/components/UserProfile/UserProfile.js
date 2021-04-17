@@ -1,38 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer } from '../../helpers/layout';
-import { api, handleError } from '../../helpers/api';
-import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
-
 import JoinPortfolio from "../popups/JoinPortfolio";
 import CreatePortfolio from "../popups/CreatePortfolio";
 import HamburgerMenuItem from "../HamburgerMenuItem/HamburgerMenuItem";
 import DropDown from "../popups/DropDown";
 import SortingDropDown from "../popups/SortingDropDown";
+import NewEmail from "../popups/NewEmail";
+import {BlackPopupInner} from "../../views/PopUps/BlackPopupInner";
+import NewPwd from "../popups/NewPwd";
+import NewUserName from "../popups/NewUserName";
+import ProfileInfoToChange from "../../views/PopUps/ProfileInfoToChange";
+import {InputField} from "../../views/design/InputField";
+import {Label} from "../../views/design/Label";
+import {Button} from "../../views/design/Button";
+import {DropDownContainer} from "../../views/Containers/DropDownContainer";
 
-
-export const Button = styled.button`
-  &:hover {
-    transform: translateY(-2px);
-  }
-  padding: 6px;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 13px;
-  text-align: center;
-  color: rgba(255, 255, 255, 1);
-  width: ${props => props.width || null};
-  width: 50%;
-  height: 35px;
-  border: none;
-  border-radius: 20px;
-  cursor: ${props => (props.disabled ? "default" : "pointer")};
-  opacity: ${props => (props.disabled ? 0.4 : 1)};
-  background: rgb(255, 173, 78);
-  transition: all 0.3s ease;
-  margin-top: 10px;
-`;
 
 
 const FormContainer = styled.div`
@@ -48,20 +32,7 @@ const FormContainer = styled.div`
   justify-content: center;
 `;
 
-const InputField = styled.input`
-  &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
-  }
-  height: 35px;
-  width:100%;
-  padding-left: 15px;
-  margin-left: -4px;
-  border: none;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  background: rgb(246, 240, 240);
-  color: rgb(29, 26, 26);
-`;
+
 
 const Form = styled.div`
   display: flex;
@@ -95,10 +66,6 @@ const PortLeadCont = styled.div`
   
 `;
 
-const Label = styled.label`
-  color: white;
-  margin-bottom: 10px;
-`;
 
 
 
@@ -110,19 +77,6 @@ const Container = styled.div`
   position: relative;
 `;
 
-const InnerPopContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-    justify-content: center;
-    align-items:center;
-
-  width:448px;
-  height:250px;
-  background: rgb(29,26,26);
-  border: none;
-  border-radius: 20px;
-  
-`;
 
 
 
@@ -135,17 +89,7 @@ const ButtonContainer = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: center;
-`;
-
-const DropDownContainer = styled.div`
-  width:200px;
-  height: 300px;
-  display: flex;
-  padding-left:1300px;
-  flex-direction: column;
-  justify-content:Center;
-  position:absolute;
-  z-index: 1;
+  margin-bottom: 15px;
 `;
 
 const PortFolios = styled.div`
@@ -180,7 +124,11 @@ class UserProfile extends React.Component {
             CreatePortTrigger: false,
             JoinPortTrigger: false,
             DropDownTrigger: false,
-            SortingDropDownTrigger: false
+            SortingDropDownTrigger: false,
+            NewEmailTrigger:false,
+            NewPwdTrigger:false,
+            NewUserNameTrigger:false
+
         };
 
         this.handleButtonClick=this.handleButtonClick.bind(this);
@@ -205,13 +153,13 @@ class UserProfile extends React.Component {
                     <DropDown trigger={this.state.DropDownTrigger} setTrigger={this.handleButtonClick}>
                         <ButtonContainer>
                             <Button style={{width:'150px'}} onClick={() => {
-                                this.handleButtonClick('JoinPortTrigger',true);
+                                this.handleButtonClick('JoinPortTrigger',!this.state.JoinPortTrigger);
                             }}>
                                 JOIN PORTFOLIO
                             </Button>
                             <Button style={{width:'150px'}} onClick={() => {
 
-                                this.handleButtonClick('CreatePortTrigger',true);
+                                this.handleButtonClick('CreatePortTrigger',!this.state.CreatePortTrigger);
                             }}>
                                 NEW PORTFOLIO
                             </Button>
@@ -240,15 +188,25 @@ class UserProfile extends React.Component {
                                 <Label>Online</Label>
                             </div>
                             <div style={{display:"flex", flexDirection:'row'}}>
-                                <div style={{display:"flex", flexDirection:'column'}}>
+                                <div style={{display:"flex", flexDirection:'row'}}>
                                     <Label style={{marginTop:'10px'}}>USERNAME: Karim31</Label>
                                     <Label>EMAIL: kareem318199@gmail.com</Label>
                                     <Label>CREATED: 31.08.2012</Label>
                                 </div>
                                 <ButtonContainer style={{marginLeft:'200px'}}>
-                                    <Button style={{width:'150px'}}>CHANGE USERNAME</Button>
-                                    <Button style={{width:'150px'}}>CHANGE EMAIL</Button>
-                                    <Button style={{width:'150px'}}>CHANGE PASSWORD</Button>
+
+
+                                    <Button style={{width:'150px'}} onClick={() => {
+                                        this.handleButtonClick('NewUserNameTrigger',true); }}>CHANGE USERNAME</Button>
+
+
+                                    <Button style={{width:'150px'}} onClick={() => {
+                                        this.handleButtonClick('NewEmailTrigger',true); }}>CHANGE EMAIL</Button>
+
+                                    <Button style={{width:'150px'}} onClick={() => {
+                                        this.handleButtonClick('NewPwdTrigger',true); }}>CHANGE PASSWORD</Button>
+
+
                                 </ButtonContainer>
                             </div>
 
@@ -269,7 +227,7 @@ class UserProfile extends React.Component {
 
                                 <SortingDropDown trigger={this.state.SortingDropDownTrigger} setTrigger={this.handleButtonClick}>
                                     <ButtonContainer>
-                                        <Button style={{width:'150px'}}>NAME</Button>
+                                        <Button style={{width:'150px'}} >NAME</Button>
                                         <Button style={{width:'150px'}}>BALANCE</Button>
                                         <Button style={{width:'150px'}}>PERFORMANCE</Button>
 
@@ -322,7 +280,7 @@ class UserProfile extends React.Component {
 
 
                         <CreatePortfolio trigger={this.state.CreatePortTrigger} setTrigger={this.handleButtonClick}>
-                            <InnerPopContainer>
+                            <BlackPopupInner>
                                 <Label style={{marginTop:'18px'}}>PORTFOLIO NAME</Label>
                                 <InputField style={{width:'90%'}}/>
                                 <div style={{display:'flex', flexDirection: 'row',
@@ -332,18 +290,47 @@ class UserProfile extends React.Component {
                                     <Button style={{width:'40%',marginLeft:'14px'}}>SHARED</Button>
                                 </div>
                                 <Button>+ CREATE PORTFOLIO </Button>
-                            </InnerPopContainer>
+                            </BlackPopupInner>
                         </CreatePortfolio>
 
 
 
                         <JoinPortfolio trigger={this.state.JoinPortTrigger} setTrigger={this.handleButtonClick}>
-                            <InnerPopContainer>
+                            <BlackPopupInner>
                                 <Label>Portfolio invite code</Label>
                                 <InputField style={{width:'80%', marginTop:'12px'}}/>
                                 <Button> JOIN PORTFOLIO</Button>
-                            </InnerPopContainer>
+                            </BlackPopupInner>
                         </JoinPortfolio>
+
+
+
+                        <NewEmail trigger={this.state.NewEmailTrigger} setTrigger={this.handleButtonClick}>
+                            <BlackPopupInner>
+                                <ProfileInfoToChange InfoToChange={'Email'} type={"email"}/>
+                                <ButtonContainer>
+                                    <Button>CONFIRM</Button>
+                                </ButtonContainer>
+                            </BlackPopupInner>
+                        </NewEmail>
+
+                        <NewUserName trigger={this.state.NewUserNameTrigger} setTrigger={this.handleButtonClick}>
+                            <BlackPopupInner>
+                                <ProfileInfoToChange InfoToChange={'Username'} type={"text"}/>
+                                <ButtonContainer>
+                                    <Button>CONFIRM</Button>
+                                </ButtonContainer>
+                            </BlackPopupInner>
+                        </NewUserName>
+
+                        <NewPwd trigger={this.state.NewPwdTrigger} setTrigger={this.handleButtonClick}>
+                            <BlackPopupInner>
+                                <ProfileInfoToChange InfoToChange={'Password'} type={"password"}/>
+                                <ButtonContainer>
+                                    <Button>CONFIRM</Button>
+                                </ButtonContainer>
+                            </BlackPopupInner>
+                        </NewPwd>
 
 
 

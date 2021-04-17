@@ -7,7 +7,9 @@ import XSvg from "../../views/SVGS/XSvg";
 
 
 
-class CreatePortfolio extends React.Component {
+
+
+class NewEmail extends React.Component {
     constructor(props) {
         super(props);
 
@@ -20,7 +22,7 @@ class CreatePortfolio extends React.Component {
             this.props.trigger ?(
                 <Popup>
                     <PopupInner>
-                        <RedXWrapper onClick={() => this.props.setTrigger("CreatePortTrigger",false)}>
+                        <RedXWrapper onClick={() => this.props.setTrigger("NewEmailTrigger",false)}>
                             <XSvg/>
                         </RedXWrapper>
                         {this.props.children}
@@ -31,4 +33,4 @@ class CreatePortfolio extends React.Component {
     }
 }
 
-export default withRouter(CreatePortfolio);
+export default withRouter(NewEmail);

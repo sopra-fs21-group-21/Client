@@ -2,12 +2,10 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import {Popup} from "../../views/PopUps/Popup";
 import {PopupInner} from "../../views/PopUps/PopupInner";
-import {RedXWrapper} from "../../views/SVGS/RedXWrapper";
 import XSvg from "../../views/SVGS/XSvg";
+import {RedXWrapper} from "../../views/SVGS/RedXWrapper";
 
-
-
-class CreatePortfolio extends React.Component {
+class NewPwd extends React.Component {
     constructor(props) {
         super(props);
 
@@ -20,7 +18,7 @@ class CreatePortfolio extends React.Component {
             this.props.trigger ?(
                 <Popup>
                     <PopupInner>
-                        <RedXWrapper onClick={() => this.props.setTrigger("CreatePortTrigger",false)}>
+                        <RedXWrapper onClick={() => this.props.setTrigger("NewPwdTrigger",false)}>
                             <XSvg/>
                         </RedXWrapper>
                         {this.props.children}
@@ -31,4 +29,4 @@ class CreatePortfolio extends React.Component {
     }
 }
 
-export default withRouter(CreatePortfolio);
+export default withRouter(NewPwd);
