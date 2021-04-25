@@ -1,8 +1,8 @@
-import {Background} from 'C:/Users/chant/Desktop/group-21-sopra/src/Design/Background';
-import {BaseContainer} from 'C:/Users/chant/Desktop/group-21-sopra/src/Design/BaseContainer';
-import {Label} from 'C:/Users/chant/Desktop/group-21-sopra/src/Design/Label';
-import {InputField} from 'C:/Users/chant/Desktop/group-21-sopra/src/Design/InputField';
-import {Button} from 'C:/Users/chant/Desktop/group-21-sopra/src/Design/Button';
+import {Background} from "../Design/Background";
+import {BaseContainer} from "../Design/BaseContainer";
+import {Label} from "../Design/Label";
+import {InputField} from "../Design/InputField";
+import {Button} from "../Design/Button";
 import React from "react";
 import styled from "styled-components";
 

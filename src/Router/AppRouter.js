@@ -1,10 +1,10 @@
 import React from "react";
 import {Redirect, Route, Switch} from "react-router-dom";
-import Login from 'C:/Users/chant/Desktop/group-21-sopra/src/Login/Login';
-import Register from 'C:/Users/chant/Desktop/group-21-sopra/src/Register/Register';
-import Dashboard from 'C:/Users/chant/Desktop/group-21-sopra/src/Dashboard/Dashboard';
-import Profile from 'C:/Users/chant/Desktop/group-21-sopra/src/Profile/Profile';
-import Portfolio from 'C:/Users/chant/Desktop/group-21-sopra/src/Portfolio/Portfolio';
+import Login from "../Login/Login";
+import Register from "../Register/Register";
+import Dashboard from "../Dashboard/Dashboard";
+import Profile from "../Profile/Profile";
+import Portfolio from "../Portfolio/Portfolio";
 
 class AppRouter extends React.Component{
     render(){

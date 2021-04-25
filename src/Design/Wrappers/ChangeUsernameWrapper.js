@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { withRouter } from 'react-router-dom';
-import XSvg from 'C:/Users/chant/Desktop/group-21-sopra/src/Design/SVGs/XSvg';
+import XSvg from "../../Design/SVGs/XSvg";
 
 const PopUpBaseContainer = styled.div`
   min-width: 35vw;
