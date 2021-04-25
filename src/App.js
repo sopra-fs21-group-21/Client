@@ -1,20 +1,13 @@
-import React, { Component } from "react";
-import Header from "./views/Header";
-import AppRouter from "./components/shared/routers/AppRouter";
+import './App.css';
+import AppRouter from 'C:/Users/chant/Desktop/group-21-sopra/src/Router/AppRouter';
+import React from "react";
 
-/**
- * Happy coding!
- * React Template by Lucas Pelloni
- */
-class App extends Component {
-  render() {
-    return (
-      <div>
-        <Header height={"100"} />
-        <AppRouter />
-      </div>
-    );
-  }
+class App extends React.Component{
+  render(){
+      return(
+          <AppRouter/>
+      );
+    }
 }
 
 export default App;

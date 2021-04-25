@@ -1,12 +1,18 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import {BrowserRouter} from "react-router-dom";
 
-/**
- * This is the entry point of your React application where the root element is in the public/index.html.
- * We call this a “root” DOM node because everything inside it will be managed by React DOM.
- * Applications built with just React usually have a single root DOM node.
- * More: https://reactjs.org/docs/rendering-elements.html
- */
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(
+  <BrowserRouter>
+    <App/>
+  </BrowserRouter>,
+  document.getElementById('root')
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
