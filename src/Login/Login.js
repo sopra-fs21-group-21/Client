@@ -7,6 +7,8 @@ import {withRouter} from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
 
+import { api, handleError } from '../helpers/api';
+
 const ForgotPassword = styled(Label)`
 
   &:hover {
@@ -70,7 +72,7 @@ class Login extends React.Component{
                 <StandardLabel>Username:</StandardLabel>
                 <StandardInputField placeholder = 'Enter here...'/>
                 <StandardLabel>Password:</StandardLabel>
-                <StandardInputField placeholder = 'Enter here...'/>
+                <StandardInputField type="password" placeholder = 'Enter here...'/>
                 <ForgotPassword>forgot your password?</ForgotPassword>
                 <StandardButton
                 onClick={() => {this.login();}}
