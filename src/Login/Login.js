@@ -8,6 +8,7 @@ import React from "react";
 import styled from "styled-components";
 
 import { api, handleError } from '../helpers/api';
+import User from "../models/User";
 
 const ForgotPassword = styled(Label)`
 
@@ -55,27 +56,71 @@ class Login extends React.Component{
 
     constructor(props){
         super(props);
+        this.state = {
+            username: null,
+            password:null,
+            user:null
+        };
     }
 
     register(){
         this.props.history.push('/register');
     }
 
-    login(){
-        this.props.history.push('/dashboard');
+    async login(){
+        try {
+            const requestBody = JSON.stringify({
+                username: this.state.username,
+                password: this.state.password
+            });
+
+            const responsePut = await api.put('/users', requestBody);
+
+            // user not registered yet and will be directed to the register page
+            if (responsePut.data.username === null ){
+                await alert(`please sign up first`);
+                this.props.history.push({
+                    pathname: '/register',
+                });
+            }
+            // login success and user will be redirected to the dashboard page
+            // token is saved to the localstorage
+            else {
+                var mainUser = new User(responsePut.data);
+                console.log("ich bin mainUser")
+                console.log(mainUser)
+                localStorage.setItem('token', mainUser.token);
+                this.props.history.push('/dashboard');
+            }
     }
+        catch (error) {
+            alert(`Something went wrong during the login: \n${handleError(error)}`);
+        }
+    }
+
+    handleInputChange(key, value) {
+        this.setState({ [key]: value });
+    }
+
+
 
     render(){
         return(
         <Background>
             <StandardBaseContainer>
+                //username
                 <StandardLabel>Username:</StandardLabel>
-                <StandardInputField placeholder = 'Enter here...'/>
+                <StandardInputField placeholder = 'Enter here...'               onChange={e => {
+                    this.handleInputChange('username', e.target.value);
+                }}/>
                 <StandardLabel>Password:</StandardLabel>
-                <StandardInputField type="password" placeholder = 'Enter here...'/>
+                <StandardInputField type="password" placeholder = 'Enter here...' onChange={e => {
+                    this.handleInputChange('password', e.target.value);
+                }}/>
                 <ForgotPassword>forgot your password?</ForgotPassword>
-                <StandardButton
-                onClick={() => {this.login();}}
+                <StandardButton type="submit"
+                                disabled={!this.state.username || !this.state.password}
+                                onClick={() => {this.login();}}
                 >Login</StandardButton>
                 <StandardButton
                 onClick={() => {this.register();}}

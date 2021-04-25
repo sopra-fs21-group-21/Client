@@ -281,15 +281,19 @@ class Dashboard extends React.Component{
                     <MenuPopUpWrapper trigger = {this.state.DropDownTrigger} setTrigger={this.handleButtonClick}>
                         <MenuButton>Create Portfolio</MenuButton>
                         <MenuButton>Join Portfolio</MenuButton>
-                        <MenuButton onClick={()=>{
-                            this.profile();
-                        }}>
+                        <MenuButton onClick={()=>{this.profile();}}>
                             My Profile</MenuButton>
-                        <MenuButton>Logout</MenuButton>
+                        <MenuButton onClick={() => {this.logout();}}>Logout</MenuButton>
                     </MenuPopUpWrapper>
                 </MenuBarContainer>
             </Background>
         );
+    }
+    logout(){
+        if (localStorage.getItem('token'))
+            localStorage.removeItem('token')
+        this.props.history.push('/login');
+
     }
 }
 

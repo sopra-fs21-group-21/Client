@@ -216,7 +216,9 @@ class Profile extends React.Component{
             SortingDropDownTrigger: false,
             EmailTrigger: false,
             UsernameTrigger: false,
-            PasswordTrigger: false
+            PasswordTrigger: false,
+            //user
+            user:null
         }
 
         this.handleButtonClick=this.handleButtonClick.bind(this);
@@ -224,6 +226,13 @@ class Profile extends React.Component{
 
     handleButtonClick(key,bool) {
         this.setState({ [key]: bool });
+    }
+
+    logout(){
+        if (localStorage.getItem('token'))
+           localStorage.removeItem('token')
+        this.props.history.push('/login');
+
     }
 
     render(){
@@ -247,6 +256,8 @@ class Profile extends React.Component{
                             </ProfileFormContainer>
 
                             {/*Buttons*/}
+                            {/**ToChange later**/}
+                            ${localStorage.getItem('token') !== null ?
                             <ProfileButtonContainer>
                                 <ProfileChangeButton onClick = {() => {
                                     this.handleButtonClick('EmailTrigger',true)
@@ -297,7 +308,7 @@ class Profile extends React.Component{
                                     <CreatePortfolioButton>Change Password</CreatePortfolioButton>
                                     <br/>
                                 </ChangePasswordWrapper>
-                            </ProfileButtonContainer>
+                            </ProfileButtonContainer> : ""}
                         </ProfileMediumContainer>
                     </OverViewContainer>
 
@@ -387,12 +398,16 @@ class Profile extends React.Component{
                     <MenuPopUpWrapper trigger = {this.state.DropDownTrigger} setTrigger={this.handleButtonClick}>
                         <MenuButton>Create Portfolio</MenuButton>
                         <MenuButton>Join Portfolio</MenuButton>
-                        <MenuButton>Dashboard</MenuButton>
-                        <MenuButton>Logout</MenuButton>
+                        <MenuButton onClick={() => {this.redirectToDashB();}}>Dashboard</MenuButton>
+                        <MenuButton onClick={() => {this.logout();}}>Logout</MenuButton>
                     </MenuPopUpWrapper>
                 </MenuBarContainer>
             </Background>
         );
+    }
+
+    redirectToDashB() {
+        this.props.history.push('/dashboard');
     }
 }
 

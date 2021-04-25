@@ -5,6 +5,9 @@ import {InputField} from "../Design/InputField";
 import {Button} from "../Design/Button";
 import React from "react";
 import styled from "styled-components";
+import User from "../models/User";
+import {api, handleError} from "../helpers/api";
+import {Link} from "react-router-dom";
 
 const AlreadyAccount = styled(Label)`
 
@@ -56,10 +59,43 @@ const StandardButton = styled(Button)`
 class Register extends React.Component{
     constructor(props){
         super(props);
+        this.state = {
+            username: null,
+            email:null,
+            password:null,
+            repeatedPwd:null
+        };
     }
 
-    redirect(){
-        this.props.history.push('/login')
+
+    async register() {
+        try {
+            const requestBody = JSON.stringify({
+                username: this.state.username,
+                password: this.state.password,
+                mail:this.state.email
+            });
+            console.log(requestBody.data)
+            const responsePOST = await api.post('/users', requestBody);
+
+            // Get the returned user and update a new object.
+            const user = new User(responsePOST.data);
+            console.log("ich bin sign up")
+            ;console.log(user)
+
+            // Store the token into the local storage.
+            localStorage.setItem('token', user.token);
+
+            // Login successfully worked --> navigate to the route /dashboard
+            this.props.history.push(`/dashboard`);
+        }
+        catch (error) {
+            alert(`Something went wrong during the login: \n${handleError(error)}`);
+        }
+    }
+
+    handleInputChange(key, value) {
+        this.setState({ [key]: value });
     }
 
     render(){
@@ -67,19 +103,27 @@ class Register extends React.Component{
             <Background>
                 <StandardBaseContainer>
                     <StandardLabel>Username:</StandardLabel>
-                    <StandardInputField placeholder = 'Enter here...'/>
-                    <StandardLabel>Email:</StandardLabel>
-                    <StandardInputField placeholder = 'Enter here...'/>
-                    <StandardLabel>Password:</StandardLabel>
-                    <StandardInputField placeholder = 'Enter here...'/>
-                    <StandardLabel>Repeat Password:</StandardLabel>
-                    <StandardInputField placeholder = 'Enter here...'/>
-                    <StandardButton
-                    onClick={() => {this.redirect();}}
+                    <StandardInputField placeholder = 'Enter here...' onChange={e => {
+                        this.handleInputChange('username', e.target.value);
+                    }}/>
+                    <StandardLabel >Email:</StandardLabel>
+                    <StandardInputField  type="email" placeholder = 'Enter here...' onChange={e => {
+                        this.handleInputChange('email', e.target.value);
+                    }}/>
+                    <StandardLabel >Password:</StandardLabel>
+                    <StandardInputField type="password" placeholder = 'Enter here...' onChange={e => {
+                        this.handleInputChange('password', e.target.value);
+                    }}/>
+                    <StandardLabel >Repeat Password:</StandardLabel>
+                    <StandardInputField  type="password" placeholder = 'Enter here...' onChange={e => {
+                        this.handleInputChange('repeatedPwd', e.target.value);
+                    }}/>
+                    <StandardButton   disabled={!this.state.username || !this.state.password || !this.state.repeatedPwd || !this.state.email || !(this.state.repeatedPwd===this.state.password)}
+                                      onClick={() => {this.register();}}
                     >Register</StandardButton>
-                    <AlreadyAccount as='button'
-                    onClick={() => {this.redirect();}}
-                    >Already have an Account...?</AlreadyAccount>
+                    <Link  to="/login"><AlreadyAccount style={{cursor: 'pointer'}} as='button'
+
+                    >Already have an Account...?</AlreadyAccount></Link>
                 </StandardBaseContainer>
             </Background>
         );
