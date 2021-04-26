@@ -31,7 +31,7 @@ class AppRouter extends React.Component{
                     )}/>
 
                     {/**profile**/}
-                    <Route exact path = '/profile' component = {Profile}/>
+                    <Route exact path = '/profile/:id' component = {Profile}/>
 
                     {/**portfolio**/}
                     <Route exact path = '/portfolio' component = {Portfolio}/>

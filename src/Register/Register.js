@@ -69,7 +69,7 @@ class Register extends React.Component{
 
 
     async register() {
-       // try {
+       try {
             const requestBody = JSON.stringify({
                 username: this.state.username,
                 password: this.state.password,
@@ -78,21 +78,24 @@ class Register extends React.Component{
             console.log(requestBody.data)
             const responsePOST = await api.post('/users', requestBody);
 
-            // Get the returned user and update a new object.
-            const user = new User(responsePOST.data);
 
             // Store the token into the local storage.
-            localStorage.setItem('token', user.token);
+             var user = new User(responsePOST.data)
+             user.pwd = await this.state.password
+           console.log("register")
+            console.log(user)
+            localStorage.setItem('user', JSON.stringify(user));
 
             // Login successfully worked --> navigate to the route /dashboard
             this.props.history.push({
                 pathname: '/dashboard',
             });
-        // }
-        // catch (error) {
-        //     alert(`Something went wrong during register: \n${handleError(error)}`);
-        // }
-    }
+         }
+         catch (error) {
+             if (error.response.data.message )
+                 await alert(error.response.data.message );
+             else alert("error occurred while sign up")
+    }}
 
     handleInputChange(key, value) {
         this.setState({ [key]: value });

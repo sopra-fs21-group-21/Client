@@ -200,17 +200,28 @@ class Dashboard extends React.Component{
                 }}>
                     <MenuItem/>
                     <MenuPopUpWrapper trigger = {this.state.DropDownTrigger} setTrigger={this.handleButtonClick}>
-                        <MenuButton>Create Portfolio</MenuButton>
-                        <MenuButton>Join Portfolio</MenuButton>
-                        <MenuButton onClick={()=>{
-                            this.profile();
-                        }}>
+                        {/**create portfolio popup**/}
+                        <MenuButton onClick = {() => {
+                            this.handleButtonClick('CreatePortTrigger',true)
+                            this.handleButtonClick('JoinPortTrigger',false)}}>Create Portfolio</MenuButton>
+                        {/**join portfolio popup**/}
+                        <MenuButton onClick = {() => {
+                            this.handleButtonClick('JoinPortTrigger',true)
+                            this.handleButtonClick('CreatePortTrigger',false)}}>Join Portfolio</MenuButton>
+                        {/**redirect to profile**/}
+                        <MenuButton onClick={()=>{this.profile();}}>
                             My Profile</MenuButton>
-                        <MenuButton>Logout</MenuButton>
+                        {/**log out user to profile**/}
+                        <MenuButton onClick={() => {this.logout();}}>Logout</MenuButton>
                     </MenuPopUpWrapper>
                 </MenuBarContainer>
             </Background>
         );
+    }
+    logout(){
+        if (localStorage.getItem('user'))
+            localStorage.removeItem('user')
+        this.props.history.push('/login');
     }
 }
 

@@ -10,6 +10,8 @@ class User {
     this.token = null;
     this.username = null;
     this.id = null;
+    this.mail=null;
+    this.pwd = null;
     Object.assign(this, data);
   }
 }

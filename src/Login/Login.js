@@ -80,9 +80,10 @@ class Login extends React.Component{
             // login success and user will be redirected to the dashboard page
             // token is saved to the localstorage
                 var mainUser = new User(responsePut.data);
-                console.log("ich bin mainUser")
+                mainUser.pwd = this.state.password
+                console.log("login")
                 console.log(mainUser)
-                localStorage.setItem('token', mainUser.token);
+                localStorage.setItem('user', JSON.stringify(mainUser));
                 this.props.history.push('/dashboard');
 
     }
@@ -95,7 +96,7 @@ class Login extends React.Component{
                 });
             }
 
-            if (error.response.data.message === "Wrong password" ){
+            else if (error.response.data.message === "Wrong password" ){
                 await alert(`Wrong password, please try again`);
             }
             else alert(`Something went wrong during the login: \n${handleError(error)}`);

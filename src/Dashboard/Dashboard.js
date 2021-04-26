@@ -15,6 +15,7 @@ import JoinPortfolioWrapper from "../Design/Wrappers/JoinPortfolioWrapper";
 import {withRouter} from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
+import User from "../models/User";
 
 const DashboardBaseContainer = styled(BaseContainer)`
   min-width: 80vw;
@@ -137,6 +138,8 @@ const CreatePortfolioButton = styled(Button)`
     margin-right: 10%;
 `
 
+
+
 class Dashboard extends React.Component{
     constructor(props){
         super(props);
@@ -161,20 +164,24 @@ class Dashboard extends React.Component{
             'name': 'Alessandro',
             'performance': '-69%'
         };
+        const user = new User(JSON.parse(localStorage.getItem('user')))
+        console.log(user)
+
 
         this.state = {
             portfolios: [portfolioVuki,portfolioKarim,portfolioAle],
             CreatePortTrigger: false,
             JoinPortTrigger: false,
             DropDownTrigger: false,
-            SortingDropDownTrigger: false
+            SortingDropDownTrigger: false,
+            user: user
         }
 
         this.handleButtonClick=this.handleButtonClick.bind(this);
     }
 
     profile(){
-        this.props.history.push('/profile');
+        this.props.history.push(`/profile/${this.state.user.id}`, {user:this.state.user});
     }
 
     handleButtonClick(key,bool) {
@@ -301,8 +308,8 @@ class Dashboard extends React.Component{
         );
     }
     logout(){
-        if (localStorage.getItem('token'))
-            localStorage.removeItem('token')
+        if (localStorage.getItem('user'))
+            localStorage.removeItem('user')
         this.props.history.push('/login');
     }
 }
