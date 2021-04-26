@@ -13,20 +13,27 @@ class AppRouter extends React.Component{
         return(
             <BrowserRouter>
                 <Switch>
-                    <Route exact path = '/'>
-                        <Redirect to='/login' />
-                    </Route>
+                    <Route exact path = '/'><Redirect to='/login' /></Route>
+                    {/**login**/}
                     <Route exact path = '/login' component = {Login}/>
-                    <Route exact path = '/register' render={() => (
-                        <RegisterGuard><Register/></RegisterGuard>
+
+                    {/**Register**/}
+                    <Route exact path = '/register' render={(props) => (
+                        <RegisterGuard><Register {...props}/> </RegisterGuard>
                     )}/>
-                    <Route exact path = '/signup' render={() => (
-                        <RegisterGuard><Register/></RegisterGuard>
+                    <Route exact path = '/signup' render={(props) => (
+                        <RegisterGuard><Register {...props}/> </RegisterGuard>
                     )}/>
+
+                    {/**DashBoard**/}
                     <Route exact path = '/dashboard' render={() => (
                         <Dashboard/>
                     )}/>
+
+                    {/**profile**/}
                     <Route exact path = '/profile' component = {Profile}/>
+
+                    {/**portfolio**/}
                     <Route exact path = '/portfolio' component = {Portfolio}/>
                 </Switch>
             </BrowserRouter>

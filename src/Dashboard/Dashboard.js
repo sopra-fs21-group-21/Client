@@ -225,6 +225,8 @@ class Dashboard extends React.Component{
                             {/*Create Portfolio Button and the Pop Up*/}
                             <DashBoardButton onClick = {() => {
                                 this.handleButtonClick('CreatePortTrigger',true)
+                                this.handleButtonClick('JoinPortTrigger',false)
+
                             }}>
                             Create Portfolio
                             </DashBoardButton>
@@ -244,9 +246,10 @@ class Dashboard extends React.Component{
                                 <br/>
                             </CreatePortfolioWrapper>
 
-                            {/*Join Portfolio Button and the Pop Up*/}
+                            {/**Join Portfolio Button and the Pop Up*/}
                             <DashBoardButton onClick={() => {
                                 this.handleButtonClick('JoinPortTrigger',true)
+                                this.handleButtonClick('CreatePortTrigger',false)
                             }}>
                             Join Existing Portfolio
                             </DashBoardButton>
@@ -279,10 +282,18 @@ class Dashboard extends React.Component{
                 }}>
                     <MenuItem/>
                     <MenuPopUpWrapper trigger = {this.state.DropDownTrigger} setTrigger={this.handleButtonClick}>
-                        <MenuButton>Create Portfolio</MenuButton>
-                        <MenuButton>Join Portfolio</MenuButton>
+                        {/**create portfolio popup**/}
+                        <MenuButton onClick = {() => {
+                            this.handleButtonClick('CreatePortTrigger',true)
+                            this.handleButtonClick('JoinPortTrigger',false)}}>Create Portfolio</MenuButton>
+                        {/**join portfolio popup**/}
+                        <MenuButton onClick = {() => {
+                            this.handleButtonClick('JoinPortTrigger',true)
+                            this.handleButtonClick('CreatePortTrigger',false)}}>Join Portfolio</MenuButton>
+                        {/**redirect to profile**/}
                         <MenuButton onClick={()=>{this.profile();}}>
                             My Profile</MenuButton>
+                        {/**log out user to profile**/}
                         <MenuButton onClick={() => {this.logout();}}>Logout</MenuButton>
                     </MenuPopUpWrapper>
                 </MenuBarContainer>
@@ -293,7 +304,6 @@ class Dashboard extends React.Component{
         if (localStorage.getItem('token'))
             localStorage.removeItem('token')
         this.props.history.push('/login');
-
     }
 }
 

@@ -18,6 +18,7 @@ import ChangeUsernameWrapper from "../Design/Wrappers/ChangeUsernameWrapper";
 import {withRouter} from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
+import LoadingSpinner from "../Design/LoadingSpinner";
 
 
 
@@ -249,10 +250,12 @@ class Profile extends React.Component{
 
                             {/*ProfileInformation*/}
                             <ProfileFormContainer>
+                                {!this.state.user ? (<LoadingSpinner />) : (
+                                    <div>
                                 <UserInfo>Status: {this.state.userInfo.status}</UserInfo>
                                 <UserInfo>Username: {this.state.userInfo.username}</UserInfo>
                                 <UserInfo>E-Mail: {this.state.userInfo.email}</UserInfo>
-                                <UserInfo>Joined: {this.state.userInfo.created}</UserInfo>
+                                <UserInfo>Joined: {this.state.userInfo.created}</UserInfo></div>) }
                             </ProfileFormContainer>
 
                             {/*Buttons*/}
@@ -348,8 +351,8 @@ class Profile extends React.Component{
 
                             {/*Create Portfolio Button and the Pop Up*/}
                             <DashBoardButton onClick = {() => {
-                                this.handleButtonClick('CreatePortTrigger',true)
-                            }}>
+                                this.handleButtonClick('JoinPortTrigger',false)
+                                this.handleButtonClick('CreatePortTrigger',true)                            }}>
                                 Create Portfolio
                             </DashBoardButton>
 
@@ -371,7 +374,7 @@ class Profile extends React.Component{
                             {/*Join Portfolio Button and the Pop Up*/}
                             <DashBoardButton onClick={() => {
                                 this.handleButtonClick('JoinPortTrigger',true)
-                            }}>
+                                this.handleButtonClick('CreatePortTrigger',false)                            }}>
                                 Join Existing Portfolio
                             </DashBoardButton>
 
@@ -396,8 +399,14 @@ class Profile extends React.Component{
                 }}>
                     <MenuItem/>
                     <MenuPopUpWrapper trigger = {this.state.DropDownTrigger} setTrigger={this.handleButtonClick}>
-                        <MenuButton>Create Portfolio</MenuButton>
-                        <MenuButton>Join Portfolio</MenuButton>
+                        {/**create portfolio popup**/}
+                        <MenuButton onClick = {() => {
+                            this.handleButtonClick('CreatePortTrigger',true)
+                            this.handleButtonClick('JoinPortTrigger',false)}}>Create Portfolio</MenuButton>
+                        {/**join portfolio popup**/}
+                        <MenuButton onClick = {() => {
+                            this.handleButtonClick('JoinPortTrigger',true)
+                            this.handleButtonClick('CreatePortTrigger',false)}}>Join Portfolio</MenuButton>
                         <MenuButton onClick={() => {this.redirectToDashB();}}>Dashboard</MenuButton>
                         <MenuButton onClick={() => {this.logout();}}>Logout</MenuButton>
                     </MenuPopUpWrapper>

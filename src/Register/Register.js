@@ -57,8 +57,8 @@ const StandardButton = styled(Button)`
 `
 
 class Register extends React.Component{
-    constructor(props){
-        super(props);
+    constructor(){
+        super();
         this.state = {
             username: null,
             email:null,
@@ -69,7 +69,7 @@ class Register extends React.Component{
 
 
     async register() {
-        try {
+       // try {
             const requestBody = JSON.stringify({
                 username: this.state.username,
                 password: this.state.password,
@@ -80,18 +80,18 @@ class Register extends React.Component{
 
             // Get the returned user and update a new object.
             const user = new User(responsePOST.data);
-            console.log("ich bin sign up")
-            ;console.log(user)
 
             // Store the token into the local storage.
             localStorage.setItem('token', user.token);
 
             // Login successfully worked --> navigate to the route /dashboard
-            this.props.history.push(`/dashboard`);
-        }
-        catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
-        }
+            this.props.history.push({
+                pathname: '/dashboard',
+            });
+        // }
+        // catch (error) {
+        //     alert(`Something went wrong during register: \n${handleError(error)}`);
+        // }
     }
 
     handleInputChange(key, value) {
