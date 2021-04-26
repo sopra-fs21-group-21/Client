@@ -76,25 +76,29 @@ class Login extends React.Component{
 
             const responsePut = await api.put('/users', requestBody);
 
-            // user not registered yet and will be directed to the register page
-            if (responsePut.data.username === null ){
-                await alert(`please sign up first`);
-                this.props.history.push({
-                    pathname: '/register',
-                });
-            }
+
             // login success and user will be redirected to the dashboard page
             // token is saved to the localstorage
-            else {
                 var mainUser = new User(responsePut.data);
                 console.log("ich bin mainUser")
                 console.log(mainUser)
                 localStorage.setItem('token', mainUser.token);
                 this.props.history.push('/dashboard');
-            }
+
     }
         catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            // user not registered yet and will be directed to the register page
+            if (error.response.data.message === "No such user exists" ){
+                await alert(`please sign up first`);
+                this.props.history.push({
+                    pathname: '/register',
+                });
+            }
+
+            if (error.response.data.message === "Wrong password" ){
+                await alert(`Wrong password, please try again`);
+            }
+            else alert(`Something went wrong during the login: \n${handleError(error)}`);
         }
     }
 
