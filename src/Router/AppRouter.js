@@ -9,6 +9,7 @@ import {RegisterGuard} from "./routeProtectors/RegisterGuard";
 import {DashBoardGuard} from "./routeProtectors/DashBoardGuard";
 import {ProfileIdGuard} from "./routeProtectors/ProfileIdGuard";
 import {ProfileGuard} from "./routeProtectors/ProfileGuard";
+import {LoginGuard} from "./routeProtectors/LoginGuard";
 
 
 class AppRouter extends React.Component{
@@ -18,7 +19,8 @@ class AppRouter extends React.Component{
                 <Switch>
                     <Route exact path = '/'><Redirect to='/login' /></Route>
                     {/**login**/}
-                    <Route exact path = '/login' component = {Login}/>
+                    <Route exact path = '/login' render={(props) => (
+                        <LoginGuard><Login {...props}/> </LoginGuard>)}/>
 
                     {/**Register**/}
                     <Route exact path = '/register' render={(props) => (
