@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { withRouter } from 'react-router-dom';
 import XSvg from "../../Design/SVGs/XSvg";
+import {Popup} from "./PopUp";
 
 const PopUpBaseContainer = styled.div`
   min-width: 35vw;
@@ -48,7 +49,7 @@ class ChangePasswordWrapper extends React.Component{
     render() {
         return (
             this.props.trigger ? (
-                <PopUpBaseContainer>
+                <Popup><PopUpBaseContainer>
                     <XWrapper onClick={() =>
                         this.props.setTrigger("PasswordTrigger",false)
                     }>
@@ -57,7 +58,7 @@ class ChangePasswordWrapper extends React.Component{
                     <SecondaryContainer>
                         {this.props.children}
                     </SecondaryContainer>
-                </PopUpBaseContainer>
+                </PopUpBaseContainer></Popup>
             ) : ""
         );
     }

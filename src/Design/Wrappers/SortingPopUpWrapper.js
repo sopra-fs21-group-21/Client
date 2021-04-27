@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { withRouter } from 'react-router-dom';
 import ArrowUpSvg from "../../Design/SVGs/ArrowUpSvg";
+import {Popup} from "./PopUp";
 
 
 const PopUpBaseContainer = styled.div`
