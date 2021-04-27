@@ -20,9 +20,9 @@ jobs:
     # checkout repository code
     - uses: actions/checkout@v1
    
-    # uncomment for assignment 2-4
-    - name: SonarCloud Scan
-    uses: sonarsource/sonarcloud-github-action@master
+    # uncomment for assignment 2-4 #Vuki fehler isch passiert nachdem ich 24,25 uscommentiert han
+    #- name: SonarCloud Scan
+    #uses: sonarsource/sonarcloud-github-action@master
     
     # create .netrc file for heroku authentication
     # https://devcenter.heroku.com/articles/authentication
