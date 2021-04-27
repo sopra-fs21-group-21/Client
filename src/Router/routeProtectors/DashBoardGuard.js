@@ -1,14 +1,15 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 
+
 export const DashBoardGuard = props => {
+        /**user is logged in**/
+        if (localStorage.getItem("user")) {
+            return props.children;
+        }
+        else
+        {
+            alert(`Cant redirect, please log in first`);
 
-    if (localStorage.getItem("token")) {
-        return props.children;
-    }
-    else
-    {
-        alert(`Please login or sign up first in order to access the desired URL`);
-
-        return <Redirect to={"/login"} />;}
-};
+            return <Redirect to={"/login"} />;}
+    };

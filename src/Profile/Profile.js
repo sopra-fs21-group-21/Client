@@ -253,8 +253,7 @@ class Profile extends React.Component{
             password: this.state.newPwd,
             mail:this.state.mail
         });
-        try
-        {
+        try{
             await api.put(`/users/${this.state.mainUser.id}`, requestBody);
             const responseGet = await api.get(`/users/${this.state.mainUser.id}`);
             const oldPwd = this.state.mainUser.pwd
@@ -268,12 +267,17 @@ class Profile extends React.Component{
             //change the state of the user to the new values
             this.setDataToNull()
             this.props.history.push({
-                pathname: '/dashboard',
+                pathname: '/profile',
             });        }
         catch (error){
+            if (error.response)
             if (error.response.data.message === "The provided username is already taken. Please choose another one." ){
                 alert(`The provided username is already taken. Please choose another one.`);
+                this.handleButtonClick('UsernameTrigger',true)
+
+
             }
+            console.log(error)
 
         }
 
@@ -288,8 +292,26 @@ class Profile extends React.Component{
             }
             else{
                 const { id } = this.props.match.params;
-                const response = await api.get(`/users/${id}`);
-                await this.setState({ user: response.data });
+                if (id === undefined) {this.setState({ user: this.state.mainUser });
+                    this.props.history.push({
+                        pathname: `/profile/${this.state.mainUser.id}`,
+                    });
+                    }
+                else {
+
+                    /**if user try to access profile/id where id belongs to nonuser**/
+                    try{
+                        const response = await api.get(`/users/${id}`);
+                        await this.setState({ user: response.data });
+                        }
+                        catch (error) {
+                            alert(error.message)
+                            this.setState({ user: this.state.mainUser })
+                            this.props.history.push({
+                                pathname: `/profile/${this.state.mainUser.id}`,
+                            });
+                }
+            }
             }
 
             await new Promise(resolve => setTimeout(resolve, 1000));
@@ -359,7 +381,7 @@ class Profile extends React.Component{
                                             this.handleInputChange('mail', e.target.value);
                                         }} />
                                     <br/>
-                                    <CreatePortfolioButton disabled={!this.state.mail} onClick={() => {this.updateData();
+                                    <CreatePortfolioButton disabled={!this.state.mail} onClick={() => {this.updateData()
                                         this.handleButtonClick('EmailTrigger',false)
                                     }}>Change E-Mail</CreatePortfolioButton>
                                     <br/>

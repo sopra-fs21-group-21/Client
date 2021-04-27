@@ -7,6 +7,9 @@ import Profile from "../Profile/Profile";
 import Portfolio from "../Portfolio/Portfolio";
 import {RegisterGuard} from "./routeProtectors/RegisterGuard";
 import {DashBoardGuard} from "./routeProtectors/DashBoardGuard";
+import {ProfileIdGuard} from "./routeProtectors/ProfileIdGuard";
+import {ProfileGuard} from "./routeProtectors/ProfileGuard";
+
 
 class AppRouter extends React.Component{
     render(){
@@ -27,11 +30,18 @@ class AppRouter extends React.Component{
 
                     {/**DashBoard**/}
                     <Route exact path = '/dashboard' render={() => (
-                        <Dashboard/>
+                        <DashBoardGuard><Dashboard/></DashBoardGuard>
                     )}/>
 
                     {/**profile**/}
-                    <Route exact path = '/profile/:id' component = {Profile}/>
+                    <Route exact path = '/profile/:id' render={(props) => (
+                        <ProfileIdGuard><Profile {...props}/> </ProfileIdGuard>
+                    )}/>
+
+                    <Route exact path = '/profile' render={(props) => (
+                        <ProfileGuard><Profile {...props}/> </ProfileGuard>
+                    )}/>
+
 
                     {/**portfolio**/}
                     <Route exact path = '/portfolio' component = {Portfolio}/>
