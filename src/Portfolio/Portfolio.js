@@ -15,6 +15,8 @@ import React from "react";
 import styled from "styled-components";
 import PositionOverview from "../Base Components/PositionOverview";
 import ClosePosition from "../Design/WrapperContent/ClosePosition"
+import {api} from "../helpers/api";
+import User from "../models/User";
 
 const DashboardBaseContainer = styled(BaseContainer)`
   min-width: 80vw;
@@ -185,6 +187,9 @@ const OpenPositionButton = styled(Button)`
     height: 11%;
 `
 
+const parsedUser = new User(JSON.parse(localStorage.getItem('user')))
+
+
 class Dashboard extends React.Component{
     constructor(props){
         super(props);
@@ -237,7 +242,8 @@ class Dashboard extends React.Component{
             traders: [testTrader1,testTrader2],
             positions: [testPosition1,testPosition2,testPosition3],
             ClosePositionTrigger: false,
-            OpenPositionTrigger: false
+            OpenPositionTrigger: false,
+            mainUser:parsedUser
         }
 
         this.handleButtonClick=this.handleButtonClick.bind(this);
@@ -347,17 +353,50 @@ class Dashboard extends React.Component{
                 }}>
                     <MenuItem/>
                     <MenuPopUpWrapper trigger = {this.state.DropDownTrigger} setTrigger={this.handleButtonClick}>
-                        <MenuButton>Create Portfolio</MenuButton>
-                        <MenuButton>Join Portfolio</MenuButton>
-                        <MenuButton onClick={()=>{
-                            this.profile();
-                        }}>
+                        {/**create portfolio popup**/}
+                        <MenuButton onClick = {() => {
+                            this.handleButtonClick('CreatePortTrigger',true)
+                            this.handleButtonClick('JoinPortTrigger',false)}}>Create Portfolio</MenuButton>
+                        {/**join portfolio popup**/}
+                        <MenuButton onClick = {() => {
+                            this.handleButtonClick('JoinPortTrigger',true)
+                            this.handleButtonClick('CreatePortTrigger',false)}}>Join Portfolio</MenuButton>
+                        {/**redirect to profile**/}
+                        <MenuButton onClick={()=>{this.profile();}}>
                             My Profile</MenuButton>
-                        <MenuButton>Logout</MenuButton>
+                        {/**log out user to profile**/}
+                        <MenuButton onClick={() => {this.logout();}}>Logout</MenuButton>
                     </MenuPopUpWrapper>
                 </MenuBarContainer>
             </Background>
         );
+    }
+    async logout(){
+        if (localStorage.getItem('user')){
+            try{
+                /**change the user status to offline**/
+                await api.put(`/users/logout`, {},{
+                    headers: {
+                        token: this.state.mainUser.token
+                    }
+                });
+
+                // /**update the mainUser with the actual userStatus**/
+                // const responseGet = await api.get(`/users/${this.state.mainUser.id}`);
+                // const oldPwd = this.state.mainUser.pwd
+                // const mainUser = new User(responseGet.data);
+                // mainUser.pwd = oldPwd
+                // this.state.mainUser = mainUser
+
+            }
+            catch (error){
+                console.log(error)
+            }
+
+            localStorage.removeItem('user')
+        }
+        this.props.history.push('/login');
+
     }
 }
 

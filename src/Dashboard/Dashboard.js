@@ -16,6 +16,7 @@ import {withRouter} from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
 import User from "../models/User";
+import {api} from "../helpers/api";
 
 const DashboardBaseContainer = styled(BaseContainer)`
   min-width: 80vw;
@@ -307,11 +308,34 @@ class Dashboard extends React.Component{
             </Background>
         );
     }
-    logout(){
-        if (localStorage.getItem('user'))
+    async logout(){
+        if (localStorage.getItem('user')){
+            try{
+                /**change the user status to offline**/
+                await api.put(`/users/logout`, {},{
+                    headers: {
+                        token: this.state.user.token
+                    }
+                });
+
+                // /**update the mainUser with the actual userStatus**/
+                // const responseGet = await api.get(`/users/${this.state.mainUser.id}`);
+                // const oldPwd = this.state.mainUser.pwd
+                // const mainUser = new User(responseGet.data);
+                // mainUser.pwd = oldPwd
+                // this.state.mainUser = mainUser
+
+            }
+            catch (error){
+                console.log(error)
+            }
+
             localStorage.removeItem('user')
+        }
         this.props.history.push('/login');
+
     }
 }
+
 
 export default withRouter(Dashboard);

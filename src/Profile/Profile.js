@@ -46,7 +46,7 @@ const PortfolioFormContainer = styled(FormContainer)`
   margin-top: 3%;
   flex-direction: column;
   align-content: flex-start;
-  
+
 `
 const ProfileFormContainer = styled(FormContainer)`
   width: 100%;
@@ -85,25 +85,25 @@ const PortfolioListContainer = styled(ListContainer)`
 `
 
 const PortfolioMediumContainer = styled.div`
-    height: 80%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+  height: 80%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 `
 
 const OverViewContainer = styled.div`
-    height: 100%;
-    width: 50%;
-    flex-direction: column;
+  height: 100%;
+  width: 50%;
+  flex-direction: column;
 `
 
 const PortfolioContainer = styled(ListElement)`
-    background-color: grey;
-    margin-top: 2vh;
-    margin-bottom: 2vh;
-    margin-left: 5%;
-    border-radius: 25px;
-    width: 90%;
+  background-color: grey;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  margin-left: 5%;
+  border-radius: 25px;
+  width: 90%;
 `
 
 const   DashBoardButton = styled(Button)`
@@ -166,17 +166,17 @@ const CreatePortfolioMidContainer = styled.div`
 `
 
 const CreatePortfolioButton = styled(Button)`
-    min-height: 4vh;
-    width: 40%;
-    margin-left: 10%;
-    margin-right: 10%;
+  min-height: 4vh;
+  width: 40%;
+  margin-left: 10%;
+  margin-right: 10%;
 `
 
 
 
 const ProfileChangeButton = styled(DashBoardButton)`
-    height: 3vh;
-    width: 47%; 
+  height: 3vh;
+  width: 47%;
 `
 
 class Profile extends React.Component{
@@ -240,21 +240,50 @@ class Profile extends React.Component{
         this.setState({ [key]: bool });
     }
 
-    logout(){
-        if (localStorage.getItem('user'))
-           localStorage.removeItem('user')
+    async logout(){
+        if (localStorage.getItem('user')){
+            try{
+                /**change the user status to offline**/
+                await api.put(`/users/logout`, {},{
+                    headers: {
+                        token: this.state.mainUser.token
+                    }
+                });
+
+                /**update the mainUser with the actual userStatus**/
+                const responseGet = await api.get(`/users/${this.state.mainUser.id}`);
+                const oldPwd = this.state.mainUser.pwd
+                const mainUser = new User(responseGet.data);
+                mainUser.pwd = oldPwd
+                this.state.mainUser = mainUser
+
+            }
+            catch (error){
+                console.log(error)
+            }
+
+            localStorage.removeItem('user')
+        }
         this.props.history.push('/login');
 
     }
 
     async updateData(){
+        console.log(this.state.username)
+        console.log(this.state.pwd)
+        console.log(this.state.mail)
+
         const requestBody = JSON.stringify({
             username: this.state.username,
             password: this.state.newPwd,
             mail:this.state.mail
         });
         try{
-            await api.put(`/users/${this.state.mainUser.id}`, requestBody);
+            await api.put(`/users/${this.state.mainUser.id}`, requestBody,{
+                headers: {
+                    token: this.state.mainUser.token
+                }
+            });
             const responseGet = await api.get(`/users/${this.state.mainUser.id}`);
             const oldPwd = this.state.mainUser.pwd
             var mainUser = new User(responseGet.data);
@@ -271,12 +300,12 @@ class Profile extends React.Component{
             });        }
         catch (error){
             if (error.response)
-            if (error.response.data.message === "The provided username is already taken. Please choose another one." ){
-                alert(`The provided username is already taken. Please choose another one.`);
-                this.handleButtonClick('UsernameTrigger',true)
+                if (error.response.data.message === "The provided username is already taken. Please choose another one." ){
+                    alert(`The provided username is already taken. Please choose another one.`);
+                    this.handleButtonClick('UsernameTrigger',true)
 
 
-            }
+                }
             console.log(error)
 
         }
@@ -296,22 +325,22 @@ class Profile extends React.Component{
                     this.props.history.push({
                         pathname: `/profile/${this.state.mainUser.id}`,
                     });
-                    }
+                }
                 else {
 
                     /**if user try to access profile/id where id belongs to nonuser**/
                     try{
                         const response = await api.get(`/users/${id}`);
                         await this.setState({ user: response.data });
-                        }
-                        catch (error) {
-                            alert(error.message)
-                            this.setState({ user: this.state.mainUser })
-                            this.props.history.push({
-                                pathname: `/profile/${this.state.mainUser.id}`,
-                            });
+                    }
+                    catch (error) {
+                        alert(error.message)
+                        this.setState({ user: this.state.mainUser })
+                        this.props.history.push({
+                            pathname: `/profile/${this.state.mainUser.id}`,
+                        });
+                    }
                 }
-            }
             }
 
             await new Promise(resolve => setTimeout(resolve, 1000));
@@ -325,7 +354,7 @@ class Profile extends React.Component{
 
 
     handleInputChange(key, value) {
-            this.setState({ [key]: value });
+        this.setState({ [key]: value });
     }
 
 
@@ -361,86 +390,86 @@ class Profile extends React.Component{
 
                             {!this.state.user ? "" :(
 
-                            <ProfileButtonContainer>
-                                {this.state.mainUser.token === this.state.user.token ?
-                                    <ProfileButtonContainer>
-                                        {/**Change email**/}
-                                <ProfileChangeButton onClick = {() => {
-                                    this.handleButtonClick('PasswordTrigger',false)
-                                    this.handleButtonClick('UsernameTrigger',false)
-                                    this.handleButtonClick('EmailTrigger',true)                                }}>
-                                    Change Email
-                                </ProfileChangeButton>
+                                <ProfileButtonContainer>
+                                    {this.state.mainUser.token === this.state.user.token ?
+                                        <ProfileButtonContainer>
+                                            {/**Change email**/}
+                                            <ProfileChangeButton onClick = {() => {
+                                                this.handleButtonClick('PasswordTrigger',false)
+                                                this.handleButtonClick('UsernameTrigger',false)
+                                                this.handleButtonClick('EmailTrigger',true)                                }}>
+                                                Change Email
+                                            </ProfileChangeButton>
 
-                                    {/**Change email popup**/}
-                                    <ChangeEmailWrapper trigger = {this.state.EmailTrigger} setTrigger={this.handleButtonClick}>
-                                    <br/>
-                                    <Label>New E-Mail:</Label>
-                                        <br/>
-                                        <CreatePortfolioInput onChange={e => {
-                                            this.handleInputChange('mail', e.target.value);
-                                        }} />
-                                    <br/>
-                                    <CreatePortfolioButton disabled={!this.state.mail} onClick={() => {this.updateData()
-                                        this.handleButtonClick('EmailTrigger',false)
-                                    }}>Change E-Mail</CreatePortfolioButton>
-                                    <br/>
-                                </ChangeEmailWrapper>
+                                            {/**Change email popup**/}
+                                            <ChangeEmailWrapper trigger = {this.state.EmailTrigger} setTrigger={this.handleButtonClick}>
+                                                <br/>
+                                                <Label>New E-Mail:</Label>
+                                                <br/>
+                                                <CreatePortfolioInput onChange={e => {
+                                                    this.handleInputChange('mail', e.target.value);
+                                                }} />
+                                                <br/>
+                                                <CreatePortfolioButton disabled={!this.state.mail} onClick={() => {this.updateData()
+                                                    this.handleButtonClick('EmailTrigger',false)
+                                                }}>Change E-Mail</CreatePortfolioButton>
+                                                <br/>
+                                            </ChangeEmailWrapper>
 
-                                {/**Change username**/}
-                                <ProfileChangeButton onClick = {() => {
-                                    this.handleButtonClick('PasswordTrigger',false)
-                                    this.handleButtonClick('UsernameTrigger',true)
-                                    this.handleButtonClick('EmailTrigger',false)                                }}>
-                                    Change Username
-                                </ProfileChangeButton>
+                                            {/**Change username**/}
+                                            <ProfileChangeButton onClick = {() => {
+                                                this.handleButtonClick('PasswordTrigger',false)
+                                                this.handleButtonClick('UsernameTrigger',true)
+                                                this.handleButtonClick('EmailTrigger',false)                                }}>
+                                                Change Username
+                                            </ProfileChangeButton>
 
-                                {/**Change username popup**/}
-                                <ChangeUsernameWrapper trigger = {this.state.UsernameTrigger} setTrigger={this.handleButtonClick}>
-                                    <br/>
-                                    <Label>New Username:</Label>
-                                    <br/>
-                                    <CreatePortfolioInput onChange={e => {
-                                        this.handleInputChange('username', e.target.value);
-                                    }}  />
-                                    <br/>
-                                    <CreatePortfolioButton disabled={!this.state.username} onClick={() => {this.updateData();
-                                        this.handleButtonClick('UsernameTrigger',false)
-                                    }}>Change Username</CreatePortfolioButton>
-                                    <br/>
-                                </ChangeUsernameWrapper>
+                                            {/**Change username popup**/}
+                                            <ChangeUsernameWrapper trigger = {this.state.UsernameTrigger} setTrigger={this.handleButtonClick}>
+                                                <br/>
+                                                <Label>New Username:</Label>
+                                                <br/>
+                                                <CreatePortfolioInput onChange={e => {
+                                                    this.handleInputChange('username', e.target.value);
+                                                }}  />
+                                                <br/>
+                                                <CreatePortfolioButton disabled={!this.state.username} onClick={() => {this.updateData();
+                                                    this.handleButtonClick('UsernameTrigger',false)
+                                                }}>Change Username</CreatePortfolioButton>
+                                                <br/>
+                                            </ChangeUsernameWrapper>
 
-                                    {/**Change Password**/}
-                                    <ProfileChangeButton onClick = {() => {
-                                    this.handleButtonClick('PasswordTrigger',true)
-                                    this.handleButtonClick('UsernameTrigger',false)
-                                    this.handleButtonClick('EmailTrigger',false)
+                                            {/**Change Password**/}
+                                            <ProfileChangeButton onClick = {() => {
+                                                this.handleButtonClick('PasswordTrigger',true)
+                                                this.handleButtonClick('UsernameTrigger',false)
+                                                this.handleButtonClick('EmailTrigger',false)
 
-                                    }}>
-                                    Change Password
-                                </ProfileChangeButton>
-                                        {/**Change Password popup**/}
+                                            }}>
+                                                Change Password
+                                            </ProfileChangeButton>
+                                            {/**Change Password popup**/}
 
-                                <ChangePasswordWrapper trigger = {this.state.PasswordTrigger} setTrigger={this.handleButtonClick}>
-                                    <br/>
-                                    <Label>Old Password:</Label>
-                                    <CreatePortfolioInput type='password' onChange={e => {
-                                        this.handleInputChange('pwd', e.target.value);
-                                    }} />
-                                    <br/>
-                                    <Label>New Password:</Label>
-                                    <CreatePortfolioInput type='password' onChange={e => {
-                                        this.handleInputChange('newPwd', e.target.value);
-                                    }} />
-                                    <br/>
-                                    <CreatePortfolioButton disabled={!this.state.pwd || !this.state.newPwd || !(this.state.pwd===this.state.mainUser.pwd)}
-                                                           onClick={() => {this.updateData();
-                                                               this.handleButtonClick('PasswordTrigger',false)
-                                                           }}>Change Password</CreatePortfolioButton>
-                                    <br/>
-                                </ChangePasswordWrapper>
-                                    </ProfileButtonContainer>:""}
-                            </ProfileButtonContainer>) }
+                                            <ChangePasswordWrapper trigger = {this.state.PasswordTrigger} setTrigger={this.handleButtonClick}>
+                                                <br/>
+                                                <Label>Old Password:</Label>
+                                                <CreatePortfolioInput type='password' onChange={e => {
+                                                    this.handleInputChange('pwd', e.target.value);
+                                                }} />
+                                                <br/>
+                                                <Label>New Password:</Label>
+                                                <CreatePortfolioInput type='password' onChange={e => {
+                                                    this.handleInputChange('newPwd', e.target.value);
+                                                }} />
+                                                <br/>
+                                                <CreatePortfolioButton disabled={!this.state.pwd || !this.state.newPwd || !(this.state.pwd===this.state.mainUser.pwd)}
+                                                                       onClick={() => {this.updateData();
+                                                                           this.handleButtonClick('PasswordTrigger',false)
+                                                                       }}>Change Password</CreatePortfolioButton>
+                                                <br/>
+                                            </ChangePasswordWrapper>
+                                        </ProfileButtonContainer>:""}
+                                </ProfileButtonContainer>) }
                         </ProfileMediumContainer>
                     </OverViewContainer>
 
@@ -485,22 +514,22 @@ class Profile extends React.Component{
 
 
 
-                             {!this.state.user ? "" :
-                            <Container style={{width:'100%'}}>
-                                {this.state.mainUser.token === this.state.user.token ?
-                                    <ButtonContainer>
-                                        <DashBoardButton onClick={() => {
-                                            this.handleButtonClick('JoinPortTrigger',false)
-                                            this.handleButtonClick('CreatePortTrigger',true)                            }}>
-                                            Create Portfolio
-                                        </DashBoardButton>
-                                        <DashBoardButton onClick={() => {
-                                            this.handleButtonClick('JoinPortTrigger',true)
-                                            this.handleButtonClick('CreatePortTrigger',false)                            }}>
-                                            Join Existing Portfolio
-                                        </DashBoardButton>
-                                    </ButtonContainer>:""}
-                            </Container> }
+                            {!this.state.user ? "" :
+                                <Container style={{width:'100%'}}>
+                                    {this.state.mainUser.token === this.state.user.token ?
+                                        <ButtonContainer>
+                                            <DashBoardButton onClick={() => {
+                                                this.handleButtonClick('JoinPortTrigger',false)
+                                                this.handleButtonClick('CreatePortTrigger',true)                            }}>
+                                                Create Portfolio
+                                            </DashBoardButton>
+                                            <DashBoardButton onClick={() => {
+                                                this.handleButtonClick('JoinPortTrigger',true)
+                                                this.handleButtonClick('CreatePortTrigger',false)                            }}>
+                                                Join Existing Portfolio
+                                            </DashBoardButton>
+                                        </ButtonContainer>:""}
+                                </Container> }
 
 
                             {/**Create and Join Port Wrappers**/}
