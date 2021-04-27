@@ -3,11 +3,18 @@ import {BaseContainer} from "../Design/BaseContainer";
 import {FormContainer} from "../Design/FormContainer";
 import {Label} from "../Design/Label";
 import {Button} from "../Design/Button";
+import {ListContainer} from "../Design/ListContainer"
+import {ListElement} from "../Design/ListElement"
 import MenuItem from "../Design/MenuItem";
 import MenuPopUpWrapper from "../Design/Wrappers/MenuPopUpWrapper";
+import ClosePositionWrapper from "../Design/Wrappers/ClosePositionWrapper";
+import OpenPositionWrapper from "../Design/Wrappers/OpenPositionWrapper";
+import TraderOverview from "../Base Components/TraderOverview";
 import {withRouter} from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
+import PositionOverview from "../Base Components/PositionOverview";
+import ClosePosition from "../Design/WrapperContent/ClosePosition"
 
 const DashboardBaseContainer = styled(BaseContainer)`
   min-width: 80vw;
@@ -27,11 +34,10 @@ const MidFormContainer = styled(FormContainer)`
   margin-top: 3%;
   flex-direction: column;
   align-content: flex-start;
-  
 `
-const LeaderboardFormContainer = styled(FormContainer)`
+const PortfolioFormContainer = styled(FormContainer)`
   width: 85%;
-  height: 70vh;
+  height: 55vh;
   border-radius: 25px;
   margin-left: 5%;
   margin-right: 10%;
@@ -65,7 +71,7 @@ const NameLabel = styled.label`
   font-weight: 400;
   color: white;
   text-transform: uppercase;
-  margin-left: 7%;
+  margin-left: 10%;
 `
 
 const LabelContainer = styled.div`
@@ -81,6 +87,8 @@ const BalanceLabelContainer = styled.div`
   width: 100%;
   height: 7%;
   margin-top: 3%;
+  margin-bottom: 3%;
+  margin-left: -5%;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -100,7 +108,7 @@ const PortfolioInfo = styled(Label)`
   text-transform: none;
   color: black;
   width: 100%;
-  font-weight: 400;
+  font-weight: 500;
   margin-left: 6%;
   margin-top: 1.5%;
   margin-bottom: 1.5%;
@@ -116,9 +124,82 @@ const MenuBarContainer = styled.div`
   margin-left: 20px;
 `
 
+const TraderListContainer = styled(ListContainer)`
+  padding: 0;
+  margin: 0;
+  width: 100%;
+`
+
+const TraderListElement = styled(ListElement)`
+  background-color: #5B4949;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  margin-left: 5%;
+  border-radius: 25px;
+  width: 90%;
+`
+
+const PositionListElement = styled(ListElement)`
+  background-color: #5B4949;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  border-radius: 25px;
+  width: 100%;
+  margin-left: -2.5%;
+`
+
+const PositionLabelContainer = styled.div`
+  height: 20%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-left: -5%;
+`
+
+const TraderMidFormContainer = styled(FormContainer)`
+  width: 85%;
+  height: 80%;
+  border-radius: 25px;
+  margin-left: 10%;
+  margin-right: 5%;
+  margin-top: 3%;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+`
+
+const PositionLabel = styled(Label)`
+`
+
+const OpenPositionContainer = styled.div`
+    height: 60%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+`
+
+const OpenPositionButton = styled(Button)`
+    width: 60%;
+    height: 11%;
+`
+
 class Dashboard extends React.Component{
     constructor(props){
         super(props);
+
+        const testTrader1 = {
+            'status': 'online',
+            'username': 'kareem',
+            'id': 1
+        }
+
+        const testTrader2 = {
+            'status': 'offline',
+            'username': 'vuki',
+            'id': 2
+        }
 
         const portfolioInfo = {
             'id': 1,
@@ -128,10 +209,35 @@ class Dashboard extends React.Component{
             'visibility': 'private',
             'code': '1234',
             'owner': 'chantaloons'
-        };
+        }
+
+        const testPosition1 = {
+            'id': 1,
+            'code': 'AAAA',
+            'amount':20,
+            'type': 'Short'
+        }
+
+        const testPosition2 = {
+            'id': 2,
+            'code': 'BBBB',
+            'amount':200,
+            'type': 'Long'
+        }
+
+        const testPosition3 = {
+            'id': 3,
+            'code': 'CCCC',
+            'amount':5,
+            'type': 'Short'
+        }
 
         this.state = {
-            portfolio: portfolioInfo
+            portfolio: portfolioInfo,
+            traders: [testTrader1,testTrader2],
+            positions: [testPosition1,testPosition2,testPosition3],
+            ClosePositionTrigger: false,
+            OpenPositionTrigger: false
         }
 
         this.handleButtonClick=this.handleButtonClick.bind(this);
@@ -180,18 +286,59 @@ class Dashboard extends React.Component{
 
                         {/*Traders*/}
                         <MidFormContainer>
+                            <TraderListContainer>
+                                {this.state.traders.map( trader => {
+                                return(
+                                <TraderListElement key={trader.id}>
+                                    <TraderOverview trader={trader}/>
+                                </TraderListElement>
+                                );
+                            })}
+                            </TraderListContainer>
                         </MidFormContainer>
                     </OverViewContainer>
 
-                    {/*Leaderboard*/}
+                    {/*Positions*/}
                     <OverViewContainer>
-                        <BalanceLabelContainer>
-                            <BalanceLabel>current balance: {this.state.portfolio.balance}$</BalanceLabel>
-                        </BalanceLabelContainer>
-                        <LeaderboardFormContainer>
-                        </LeaderboardFormContainer>
-                    </OverViewContainer>
 
+                        {/*Labels*/}
+                        <BalanceLabelContainer>
+                            <BalanceLabel>current balance: {this.state.portfolio.balance} CHF</BalanceLabel>
+                        </BalanceLabelContainer>
+
+                        <PositionLabelContainer>
+                            <PositionLabel>Open Positions</PositionLabel>
+                        </PositionLabelContainer>
+
+                        {/*List of Positions including the close Position element and the open position button*/}
+                        <PortfolioFormContainer>
+                            <TraderMidFormContainer>
+                                <TraderListContainer>
+                                    {this.state.positions.map( position => {
+                                        return(
+                                            <PositionListElement key={position.id}>
+                                                <PositionOverview position={position} setTrigger={this.handleButtonClick}/>
+                                            </PositionListElement>
+                                        );
+                                    })}
+                                </TraderListContainer>
+
+                                <OpenPositionContainer>
+                                    <OpenPositionButton
+                                    onClick = {() => {this.handleButtonClick('OpenPositionTrigger',true);
+                                    }}
+                                    >Open Position</OpenPositionButton>
+                                </OpenPositionContainer>
+
+                                <OpenPositionWrapper trigger={this.state.OpenPositionTrigger} setTrigger={this.handleButtonClick}>
+                                </OpenPositionWrapper>
+
+                                <ClosePositionWrapper trigger={this.state.ClosePositionTrigger} setTrigger={this.handleButtonClick}>
+                                    <ClosePosition/>
+                                </ClosePositionWrapper>
+                            </TraderMidFormContainer>
+                        </PortfolioFormContainer>
+                    </OverViewContainer>
                 </DashboardBaseContainer>
 
                 {/*Menu Bar Top Right*/}
@@ -200,28 +347,17 @@ class Dashboard extends React.Component{
                 }}>
                     <MenuItem/>
                     <MenuPopUpWrapper trigger = {this.state.DropDownTrigger} setTrigger={this.handleButtonClick}>
-                        {/**create portfolio popup**/}
-                        <MenuButton onClick = {() => {
-                            this.handleButtonClick('CreatePortTrigger',true)
-                            this.handleButtonClick('JoinPortTrigger',false)}}>Create Portfolio</MenuButton>
-                        {/**join portfolio popup**/}
-                        <MenuButton onClick = {() => {
-                            this.handleButtonClick('JoinPortTrigger',true)
-                            this.handleButtonClick('CreatePortTrigger',false)}}>Join Portfolio</MenuButton>
-                        {/**redirect to profile**/}
-                        <MenuButton onClick={()=>{this.profile();}}>
+                        <MenuButton>Create Portfolio</MenuButton>
+                        <MenuButton>Join Portfolio</MenuButton>
+                        <MenuButton onClick={()=>{
+                            this.profile();
+                        }}>
                             My Profile</MenuButton>
-                        {/**log out user to profile**/}
-                        <MenuButton onClick={() => {this.logout();}}>Logout</MenuButton>
+                        <MenuButton>Logout</MenuButton>
                     </MenuPopUpWrapper>
                 </MenuBarContainer>
             </Background>
         );
-    }
-    logout(){
-        if (localStorage.getItem('user'))
-            localStorage.removeItem('user')
-        this.props.history.push('/login');
     }
 }
 
