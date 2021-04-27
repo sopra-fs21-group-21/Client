@@ -3,6 +3,8 @@ import styled from "styled-components";
 import {FormContainer} from "../Design/FormContainer";
 import {Label} from "../Design/Label";
 import LoadingSpinner from "../Design/LoadingSpinner";
+import GreenBall from "../Design/SVGs/GreenBall";
+import RedBall from "../Design/SVGs/RedBall";
 const ProfileFormContainer = styled(FormContainer)`
   width: 100%;
   height: 50%;
@@ -34,7 +36,8 @@ class UserInfo extends React.Component{
     render() {
         return(
             <ProfileFormContainer>
-                        <UserInfoLabel>Status: {  this.state.user.status}</UserInfoLabel>
+                        <UserInfoLabel>Status: { this.state.user.status} { this.state.user.status ==='ONLINE' ?
+                        <GreenBall/> : <RedBall/>} </UserInfoLabel>
                         <UserInfoLabel>Username: {this.state.user.username}</UserInfoLabel>
                         <UserInfoLabel>E-Mail: {  this.state.user.mail}</UserInfoLabel>
                         <UserInfoLabel>Joined: {  this.state.user.creationDate.toString().slice(0, 10)}</UserInfoLabel>
