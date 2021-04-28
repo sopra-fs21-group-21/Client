@@ -175,7 +175,8 @@ class Dashboard extends React.Component{
             JoinPortTrigger: false,
             DropDownTrigger: false,
             SortingDropDownTrigger: false,
-            user: user
+            user: user,
+            portfolioCode:null
         }
 
         this.handleButtonClick=this.handleButtonClick.bind(this);
@@ -266,9 +267,15 @@ class Dashboard extends React.Component{
                                 <br/>
                                 <Label>Portfolio Code:</Label>
                                 <br/>
-                                <CreatePortfolioInput/>
+                                <CreatePortfolioInput onChange={e => {
+                                    this.handleButtonClick('portfolioCode', e.target.value);
+                                }} />
                                 <br/>
-                                <CreatePortfolioButton>Join Portfolio</CreatePortfolioButton>
+                                <CreatePortfolioButton onClick={() => {
+                                    this.joinPortfolio()
+
+
+                                }} disabled ={!this.state.portfolioCode}>Join Portfolio</CreatePortfolioButton>
                                 <br/>
                             </JoinPortfolioWrapper>
 
@@ -334,6 +341,22 @@ class Dashboard extends React.Component{
         }
         this.props.history.push('/login');
 
+    }
+
+    async joinPortfolio() {
+        try{await api.put(`/portfolios/`, {},{
+            headers: {
+                token: this.state.user.token,
+                join_code: this.state.portfolioCode
+            }
+        });
+
+        this.handleButtonClick('JoinPortTrigger',false)
+        this.handleButtonClick('portfolioCode',null)}
+
+    catch (error){
+        alert(error.response.data.message)
+        }
     }
 }
 

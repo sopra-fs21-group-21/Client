@@ -225,7 +225,9 @@ class Profile extends React.Component{
             username:null,
             mail:    null,
             pwd:     null,
-            newPwd: null
+            newPwd: null,
+
+            portfolioCode:null
 
 
         }
@@ -551,9 +553,14 @@ class Profile extends React.Component{
                                 <br/>
                                 <Label>Portfolio Code:</Label>
                                 <br/>
-                                <CreatePortfolioInput/>
+                                <CreatePortfolioInput onChange={e => {
+                                    this.handleButtonClick('portfolioCode', e.target.value);
+                                }} />
                                 <br/>
-                                <CreatePortfolioButton>Join Portfolio</CreatePortfolioButton>
+                                <CreatePortfolioButton onClick={() => {
+                                    this.joinPortfolio()
+
+                                }} disabled ={!this.state.portfolioCode}>Join Portfolio</CreatePortfolioButton>
                                 <br/>
                             </JoinPortfolioWrapper>
 
@@ -586,6 +593,22 @@ class Profile extends React.Component{
 
     redirectToDashB() {
         this.props.history.push('/dashboard');
+    }
+
+    async joinPortfolio() {
+        try{
+            await api.put(`/portfolios/`, {},{
+            headers: {
+                token: this.state.mainUser.token,
+                join_code: this.state.portfolioCode
+            }
+        });
+            this.handleButtonClick('JoinPortTrigger',false)
+            this.handleButtonClick('portfolioCode',null)}
+        catch (error){
+            alert(error.response.data.message)
+
+        }
     }
 }
 

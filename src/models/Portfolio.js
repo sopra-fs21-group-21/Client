@@ -3,7 +3,7 @@
  */
 class Portfolio {
     constructor(data = {}) {
-        this.balance = null;
+        this.cash = null;
         this.traders = null;
         this.owner = null;
         this.portfolioName = null;

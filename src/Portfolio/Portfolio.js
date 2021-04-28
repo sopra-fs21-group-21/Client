@@ -187,7 +187,7 @@ const OpenPositionButton = styled(Button)`
     height: 11%;
 `
 
-const parsedUser = new User(JSON.parse(localStorage.getItem('user')))
+    const parsedUser = new User(JSON.parse(localStorage.getItem('user')))
 
 
 class Dashboard extends React.Component{
