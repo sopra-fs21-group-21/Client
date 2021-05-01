@@ -14,7 +14,8 @@ import {withRouter} from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
 import PositionOverview from "../Base Components/PositionOverview";
-import ClosePosition from "../Design/WrapperContent/ClosePosition"
+import ClosePosition from "../Design/WrapperContent/ClosePosition";
+import OpenPosition from "../Design/WrapperContent/OpenPosition";
 import {api} from "../helpers/api";
 import User from "../models/User";
 
@@ -187,8 +188,7 @@ const OpenPositionButton = styled(Button)`
     height: 11%;
 `
 
-    const parsedUser = new User(JSON.parse(localStorage.getItem('user')))
-
+const parsedUser = new User(JSON.parse(localStorage.getItem('user')))
 
 class Dashboard extends React.Component{
     constructor(props){
@@ -238,9 +238,9 @@ class Dashboard extends React.Component{
         }
 
         this.state = {
-            portfolio: portfolioInfo,
-            traders: [testTrader1,testTrader2],
-            positions: [testPosition1,testPosition2,testPosition3],
+            portfolio: [],
+            traders: [],
+            positions: [testPosition1,testPosition2],
             ClosePositionTrigger: false,
             OpenPositionTrigger: false,
             mainUser:parsedUser
@@ -255,6 +255,11 @@ class Dashboard extends React.Component{
 
     handleButtonClick(key,bool) {
         this.setState({ [key]: bool });
+    }
+
+    async componentDidMount(){
+        let testId = this.props.match.params.id;
+        await this.getPortfolio(testId);
     }
 
     render(){
@@ -337,6 +342,7 @@ class Dashboard extends React.Component{
                                 </OpenPositionContainer>
 
                                 <OpenPositionWrapper trigger={this.state.OpenPositionTrigger} setTrigger={this.handleButtonClick}>
+                                    <OpenPosition/>
                                 </OpenPositionWrapper>
 
                                 <ClosePositionWrapper trigger={this.state.ClosePositionTrigger} setTrigger={this.handleButtonClick}>
@@ -371,6 +377,7 @@ class Dashboard extends React.Component{
             </Background>
         );
     }
+
     async logout(){
         if (localStorage.getItem('user')){
             try{
@@ -380,14 +387,6 @@ class Dashboard extends React.Component{
                         token: this.state.mainUser.token
                     }
                 });
-
-                // /**update the mainUser with the actual userStatus**/
-                // const responseGet = await api.get(`/users/${this.state.mainUser.id}`);
-                // const oldPwd = this.state.mainUser.pwd
-                // const mainUser = new User(responseGet.data);
-                // mainUser.pwd = oldPwd
-                // this.state.mainUser = mainUser
-
             }
             catch (error){
                 console.log(error)
@@ -398,6 +397,39 @@ class Dashboard extends React.Component{
         this.props.history.push('/login');
 
     }
+
+    async getPortfolio(id) {
+        const requestUrl = 'portfolios/' + id;
+        const tempUser = new User(JSON.parse(localStorage.getItem('user')));
+
+        const response = await api.get(requestUrl, {
+            headers: {
+                token: tempUser.token
+            }
+        });
+
+        console.log(response.data);
+
+        const portfolioInfo = {
+            'id': response.data.id,
+            'balance': response.data.cash,
+            'name': response.data.name,
+            'performance': response.data.weeklyPerformance,
+            'visibility': 'private',
+            'code': response.data.joinCode,
+            'owner': response.data.owner.username
+        }
+
+        this.setState({'portfolio': portfolioInfo});
+
+        const tempTraders = response.data.traders;
+
+        this.setState({'traders': tempTraders});
+
+        console.log(this.state.traders);
+
+    }
+
 }
 
 export default withRouter(Dashboard);

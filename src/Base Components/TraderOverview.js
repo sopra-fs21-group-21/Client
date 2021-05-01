@@ -34,7 +34,7 @@ const PictureTag = styled.div`
 
 const TraderOverview = ({trader}) => {
     return(
-        trader.status === 'online' ? (
+        trader.status === 'ONLINE' ? (
             <TraderContainer>
                 <InfoTag>{trader.username}</InfoTag>
                 <PictureTag>

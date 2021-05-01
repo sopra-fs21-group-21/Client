@@ -10,6 +10,7 @@ import {DashBoardGuard} from "./routeProtectors/DashBoardGuard";
 import {ProfileIdGuard} from "./routeProtectors/ProfileIdGuard";
 import {ProfileGuard} from "./routeProtectors/ProfileGuard";
 import {LoginGuard} from "./routeProtectors/LoginGuard";
+import {PortfolioIdGuard} from "./routeProtectors/PortfolioIdGuard";
 
 
 class AppRouter extends React.Component{
@@ -46,7 +47,9 @@ class AppRouter extends React.Component{
 
 
                     {/**portfolio**/}
-                    <Route exact path = '/portfolio' component = {Portfolio}/>
+                    <Route exact path = '/portfolio/:id' render = {(props) => (
+                        <PortfolioIdGuard><Portfolio {...props}/></PortfolioIdGuard>
+                    )}/>
                 </Switch>
             </BrowserRouter>
         );

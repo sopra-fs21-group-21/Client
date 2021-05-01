@@ -139,51 +139,39 @@ const CreatePortfolioButton = styled(Button)`
     margin-right: 10%;
 `
 
-
-
 class Dashboard extends React.Component{
     constructor(props){
         super(props);
 
-        const portfolioVuki = {
-            'id': 1,
-            'balance': 2000,
-            'name': 'Vuki',
-            'performance': '-20%'
-        };
-
-        const portfolioKarim = {
-            'id': 2,
-            'balance': 4000,
-            'name': 'Karim',
-            'performance': '+40%'
-        };
-
-        const portfolioAle = {
-            'id': 3,
-            'balance': 69,
-            'name': 'Alessandro',
-            'performance': '-69%'
-        };
         const user = new User(JSON.parse(localStorage.getItem('user')))
         console.log(user)
 
 
         this.state = {
-            portfolios: [portfolioVuki,portfolioKarim,portfolioAle],
+            portfolios: [],
             CreatePortTrigger: false,
             JoinPortTrigger: false,
             DropDownTrigger: false,
             SortingDropDownTrigger: false,
             user: user,
-            portfolioCode:null
+            portfolioCode: null,
+            createPortfolioName: null,
+            portfolioVisibility: 'private',
         }
 
         this.handleButtonClick=this.handleButtonClick.bind(this);
     }
 
+    async componentDidMount(){
+        await this.getPortfolios();
+    }
+
     profile(){
         this.props.history.push(`/profile/${this.state.user.id}`, {user:this.state.user});
+    }
+
+    portfolio(id){
+        this.props.history.push('portfolio/' + id);
     }
 
     handleButtonClick(key,bool) {
@@ -223,7 +211,9 @@ class Dashboard extends React.Component{
                                 <PortfolioListContainer>                                {
                                     this.state.portfolios.map( portfolio => {
                                         return(
-                                            <PortfolioContainer key={portfolio.id}>
+                                            <PortfolioContainer key={portfolio.id} onClick = {() => {
+                                                this.portfolio(portfolio.id)
+                                            }}>
                                                 <PortfolioOverview portfolio={portfolio}/>
                                             </PortfolioContainer>
                                         );
@@ -235,7 +225,6 @@ class Dashboard extends React.Component{
                             <DashBoardButton onClick = {() => {
                                 this.handleButtonClick('CreatePortTrigger',true)
                                 this.handleButtonClick('JoinPortTrigger',false)
-
                             }}>
                             Create Portfolio
                             </DashBoardButton>
@@ -244,14 +233,24 @@ class Dashboard extends React.Component{
                                 <br/>
                                 <Label>Portfolio Name:</Label>
                                 <br/>
-                                <CreatePortfolioInput/>
+                                <CreatePortfolioInput onChange={e => {
+                                    this.handleButtonClick('createPortfolioName',e.target.value)
+                                }}/>
                                 <br/>
                                 <CreatePortfolioMidContainer>
-                                    <CreatePortfolioButton>Private</CreatePortfolioButton>
-                                    <CreatePortfolioButton>Shared</CreatePortfolioButton>
+                                    <CreatePortfolioButton onClick={() => {
+                                        this.handleButtonClick('portfolioVisibility','PRIVATE')
+                                    }}>
+                                        Private</CreatePortfolioButton>
+
+                                    <CreatePortfolioButton onClick={() => {
+                                        this.handleButtonClick('portfolioVisibility','SHARED')
+                                    }}>Shared</CreatePortfolioButton>
                                 </CreatePortfolioMidContainer>
                                 <br/>
-                                <CreatePortfolioButton>+Create Portfolio</CreatePortfolioButton>
+                                <CreatePortfolioButton onClick ={()=>{
+                                  this.createPortfolio()
+                                }}>+Create Portfolio</CreatePortfolioButton>
                                 <br/>
                             </CreatePortfolioWrapper>
 
@@ -273,8 +272,6 @@ class Dashboard extends React.Component{
                                 <br/>
                                 <CreatePortfolioButton onClick={() => {
                                     this.joinPortfolio()
-
-
                                 }} disabled ={!this.state.portfolioCode}>Join Portfolio</CreatePortfolioButton>
                                 <br/>
                             </JoinPortfolioWrapper>
@@ -324,14 +321,6 @@ class Dashboard extends React.Component{
                         token: this.state.user.token
                     }
                 });
-
-                // /**update the mainUser with the actual userStatus**/
-                // const responseGet = await api.get(`/users/${this.state.mainUser.id}`);
-                // const oldPwd = this.state.mainUser.pwd
-                // const mainUser = new User(responseGet.data);
-                // mainUser.pwd = oldPwd
-                // this.state.mainUser = mainUser
-
             }
             catch (error){
                 console.log(error)
@@ -356,6 +345,53 @@ class Dashboard extends React.Component{
 
     catch (error){
         alert(error.response.data.message)
+        }
+
+        this.getPortfolios();
+    }
+
+    async createPortfolio() {
+        try {
+
+            const requestBody = {
+                'name': this.state.createPortfolioName,
+                'visibility': this.state.portfolioVisibility
+            }
+
+            console.log(requestBody);
+
+            await api.post('/portfolios/',requestBody,{
+               headers: {
+                   token: this.state.user.token
+               }
+            });
+
+            this.handleButtonClick('CreatePortTrigger',false)
+            this.handleButtonClick('createPortfolioName','')
+            this.getPortfolios()
+        }
+
+        catch(error){
+            alert(error.response.data.message)
+        }
+    }
+
+    async getPortfolios(){
+        try {
+            const requestUrl = 'users/' + this.state.user.id;
+            const response = await api.get(requestUrl, {});
+
+            console.log(response.data);
+
+            const tempPorts = response.data.collaboratingPortfolios;
+            const tempPorts2 = response.data.ownedPortfolios;
+            const tempPorts3 = tempPorts.concat(tempPorts2)
+
+            this.setState({portfolios: tempPorts3});
+        }
+
+        catch(error){
+            alert(error.response.data.message)
         }
     }
 }

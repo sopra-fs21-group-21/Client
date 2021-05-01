@@ -85,8 +85,8 @@ class Login extends React.Component{
                 console.log(mainUser)
                 localStorage.setItem('user', JSON.stringify(mainUser));
                 this.props.history.push('/dashboard');
-
     }
+
         catch (error) {
             // user not registered yet and will be directed to the register page
             if (error.response.data.message === "No such user exists" ){
