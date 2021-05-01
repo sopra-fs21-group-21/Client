@@ -223,19 +223,21 @@ class Profile extends React.Component{
     async logout(){
         if (localStorage.getItem('user')){
             try{
+                const parsedUser = new User(JSON.parse(localStorage.getItem('user')))
+
                 /**change the user status to offline**/
                 await api.put(`/users/logout`, {},{
                     headers: {
-                        token: this.state.mainUser.token
+                        token: parsedUser.token
                     }
                 });
 
-                /**update the mainUser with the actual userStatus**/
-                const responseGet = await api.get(`/users/${this.state.mainUser.id}`);
-                const oldPwd = this.state.mainUser.pwd
-                const mainUser = new User(responseGet.data);
-                mainUser.pwd = oldPwd
-                this.state.mainUser = mainUser
+                // /**update the mainUser with the actual userStatus**/
+                // const responseGet = await api.get(`/users/${this.state.mainUser.id}`);
+                // const oldPwd = this.state.mainUser.pwd
+                // const mainUser = new User(responseGet.data);
+                // mainUser.pwd = oldPwd
+                // this.state.mainUser = mainUser
 
             }
             catch (error){

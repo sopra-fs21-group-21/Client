@@ -381,10 +381,11 @@ class Dashboard extends React.Component{
     async logout(){
         if (localStorage.getItem('user')){
             try{
+                const parsedUser = new User(JSON.parse(localStorage.getItem('user')))
                 /**change the user status to offline**/
                 await api.put(`/users/logout`, {},{
                     headers: {
-                        token: this.state.mainUser.token
+                        token: parsedUser.token
                     }
                 });
             }
