@@ -415,7 +415,7 @@ class Dashboard extends React.Component{
             'balance': response.data.cash,
             'name': response.data.name,
             'performance': response.data.weeklyPerformance,
-            'visibility': 'private',
+            'visibility': response.data.portfolioVisibility,
             'code': response.data.joinCode,
             'owner': response.data.owner.username
         }
