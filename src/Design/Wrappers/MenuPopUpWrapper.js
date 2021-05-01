@@ -7,7 +7,7 @@ import {Popup} from "./PopUp";
 
 const PopUpBaseContainer = styled.div`
     min-width: 5vw;
-    min-height: 20vh;
+    min-height: 5vh;
     background-color: rgba(139,0,0,0.95);
     display: flex;
     flex-direction: column;

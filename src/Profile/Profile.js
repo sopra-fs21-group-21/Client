@@ -115,8 +115,6 @@ const   DashBoardButton = styled(Button)`
   padding: 5px;
 `
 
-
-
 const MenuButton = styled(Button)`
   width: 100%;
   margin-top: 20%;
@@ -212,9 +210,6 @@ class Profile extends React.Component{
             portfolioCode:null
         }
 
-
-
-
         this.handleButtonClick=this.handleButtonClick.bind(this);
     }
 
@@ -233,14 +228,6 @@ class Profile extends React.Component{
                         token: parsedUser.token
                     }
                 });
-
-                // /**update the mainUser with the actual userStatus**/
-                // const responseGet = await api.get(`/users/${this.state.mainUser.id}`);
-                // const oldPwd = this.state.mainUser.pwd
-                // const mainUser = new User(responseGet.data);
-                // mainUser.pwd = oldPwd
-                // this.state.mainUser = mainUser
-
             }
             catch (error){
                 console.log(error)
@@ -524,7 +511,9 @@ class Profile extends React.Component{
                                 <PortfolioListContainer>                                {
                                     this.state.portfolios.map( portfolio => {
                                         return(
-                                            <PortfolioContainer key={portfolio.id}>
+                                            <PortfolioContainer key={portfolio.id} onClick = {() => {
+                                                this.routePortfolio(portfolio.id)
+                                            }}>
                                                 <PortfolioOverview portfolio={portfolio}/>
                                             </PortfolioContainer>
                                         );
@@ -534,10 +523,6 @@ class Profile extends React.Component{
 
                             {/**Create Portfolio Button and the Pop Up*/}
                             {/**Join Portfolio Button and the Pop Up, display iff current displayed user in the logged in user*/}
-
-
-
-
 
                             {!this.state.user ? "" :
                                 <Container style={{width:'100%'}}>
@@ -607,14 +592,6 @@ class Profile extends React.Component{
                 }}>
                     <MenuItem/>
                     <MenuPopUpWrapper trigger = {this.state.DropDownTrigger} setTrigger={this.handleButtonClick}>
-                        {/**create portfolio popup**/}
-                        <MenuButton onClick = {() => {
-                            this.handleButtonClick('CreatePortTrigger',true)
-                            this.handleButtonClick('JoinPortTrigger',false)}}>Create Portfolio</MenuButton>
-                        {/**join portfolio popup**/}
-                        <MenuButton onClick = {() => {
-                            this.handleButtonClick('JoinPortTrigger',true)
-                            this.handleButtonClick('CreatePortTrigger',false)}}>Join Portfolio</MenuButton>
                         <MenuButton onClick={() => {this.redirectToDashB();}}>Dashboard</MenuButton>
                         <MenuButton onClick={() => {this.logout();}}>Logout</MenuButton>
                     </MenuPopUpWrapper>
@@ -641,6 +618,10 @@ class Profile extends React.Component{
             alert(error.response.data.message)
 
         }
+    }
+
+    routePortfolio(id){
+        this.props.history.push('/portfolio/' + id);
     }
 }
 

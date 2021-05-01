@@ -16,7 +16,7 @@ const PopUpBaseContainer = styled.div`
   position: absolute;
   padding: 1%;
   right: 21.65%;
-  top: 40%;
+  top: 23%;
 `
 const XWrapper = styled.div`
   width:100%;
@@ -34,7 +34,7 @@ const SecondaryContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   width:100%;
-  height:19vh;
+  height:57vh;
   background: rgb(29,26,26);
   border: none;
   border-radius: 20px;

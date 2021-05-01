@@ -107,7 +107,7 @@ const BalanceLabel = styled(Label)`
 `
 
 const PortfolioInfo = styled(Label)`
-  font-size: 19px;
+  font-size: 17px;
   text-transform: none;
   color: black;
   width: 100%;
@@ -194,53 +194,10 @@ class Dashboard extends React.Component{
     constructor(props){
         super(props);
 
-        const testTrader1 = {
-            'status': 'online',
-            'username': 'kareem',
-            'id': 1
-        }
-
-        const testTrader2 = {
-            'status': 'offline',
-            'username': 'vuki',
-            'id': 2
-        }
-
-        const portfolioInfo = {
-            'id': 1,
-            'balance': 2000,
-            'name': 'Vuki',
-            'performance': '-20%',
-            'visibility': 'private',
-            'code': '1234',
-            'owner': 'chantaloons'
-        }
-
-        const testPosition1 = {
-            'id': 1,
-            'code': 'AAAA',
-            'amount':20,
-            'type': 'Short'
-        }
-
-        const testPosition2 = {
-            'id': 2,
-            'code': 'BBBB',
-            'amount':200,
-            'type': 'Long'
-        }
-
-        const testPosition3 = {
-            'id': 3,
-            'code': 'CCCC',
-            'amount':5,
-            'type': 'Short'
-        }
-
         this.state = {
             portfolio: [],
             traders: [],
-            positions: [testPosition1,testPosition2],
+            positions: [],
             ClosePositionTrigger: false,
             OpenPositionTrigger: false,
             mainUser:parsedUser
@@ -300,7 +257,9 @@ class Dashboard extends React.Component{
                             <TraderListContainer>
                                 {this.state.traders.map( trader => {
                                 return(
-                                <TraderListElement key={trader.id}>
+                                <TraderListElement key={trader.id} onClick={()=>{
+                                    this.routeProfile(trader.id)
+                                }}>
                                     <TraderOverview trader={trader}/>
                                 </TraderListElement>
                                 );
@@ -342,7 +301,7 @@ class Dashboard extends React.Component{
                                 </OpenPositionContainer>
 
                                 <OpenPositionWrapper trigger={this.state.OpenPositionTrigger} setTrigger={this.handleButtonClick}>
-                                    <OpenPosition/>
+                                    <OpenPosition portfolio = {this.state.portfolio}/>
                                 </OpenPositionWrapper>
 
                                 <ClosePositionWrapper trigger={this.state.ClosePositionTrigger} setTrigger={this.handleButtonClick}>
@@ -359,14 +318,8 @@ class Dashboard extends React.Component{
                 }}>
                     <MenuItem/>
                     <MenuPopUpWrapper trigger = {this.state.DropDownTrigger} setTrigger={this.handleButtonClick}>
-                        {/**create portfolio popup**/}
-                        <MenuButton onClick = {() => {
-                            this.handleButtonClick('CreatePortTrigger',true)
-                            this.handleButtonClick('JoinPortTrigger',false)}}>Create Portfolio</MenuButton>
-                        {/**join portfolio popup**/}
-                        <MenuButton onClick = {() => {
-                            this.handleButtonClick('JoinPortTrigger',true)
-                            this.handleButtonClick('CreatePortTrigger',false)}}>Join Portfolio</MenuButton>
+                        {/**redirect to dashboard**/}
+                        <MenuButton onClick={() => {this.redirectToDashB();}}>Dashboard</MenuButton>
                         {/**redirect to profile**/}
                         <MenuButton onClick={()=>{this.profile();}}>
                             My Profile</MenuButton>
@@ -413,7 +366,7 @@ class Dashboard extends React.Component{
 
         const portfolioInfo = {
             'id': response.data.id,
-            'balance': response.data.cash,
+            'balance': response.data.balance,
             'name': response.data.name,
             'performance': response.data.weeklyPerformance,
             'visibility': response.data.portfolioVisibility,
@@ -427,10 +380,20 @@ class Dashboard extends React.Component{
 
         this.setState({'traders': tempTraders});
 
+        this.setState({'positions': response.data.positions});
+
         console.log(this.state.traders);
 
     }
 
+    redirectToDashB() {
+        this.props.history.push('/dashboard');
+    }
+
+    routeProfile(id) {
+        const pathUrl = '/profile/' + id;
+        this.props.history.push(pathUrl);
+    }
 }
 
 export default withRouter(Dashboard);

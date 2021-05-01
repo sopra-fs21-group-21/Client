@@ -171,7 +171,7 @@ class Dashboard extends React.Component{
         this.props.history.push(`/profile/${this.state.user.id}`, {user:this.state.user});
     }
 
-    portfolio(id){
+    routePortfolio(id){
         this.props.history.push('portfolio/' + id);
     }
 
@@ -214,7 +214,7 @@ class Dashboard extends React.Component{
                                     this.state.portfolios.map( portfolio => {
                                         return(
                                             <PortfolioContainer key={portfolio.id} onClick = {() => {
-                                                this.portfolio(portfolio.id)
+                                                this.routePortfolio(portfolio.id)
                                             }}>
                                                 <PortfolioOverview portfolio={portfolio}/>
                                             </PortfolioContainer>
@@ -296,14 +296,6 @@ class Dashboard extends React.Component{
                 }}>
                     <MenuItem/>
                     <MenuPopUpWrapper trigger = {this.state.DropDownTrigger} setTrigger={this.handleButtonClick}>
-                        {/**create portfolio popup**/}
-                        <MenuButton onClick = {() => {
-                            this.handleButtonClick('CreatePortTrigger',true)
-                            this.handleButtonClick('JoinPortTrigger',false)}}>Create Portfolio</MenuButton>
-                        {/**join portfolio popup**/}
-                        <MenuButton onClick = {() => {
-                            this.handleButtonClick('JoinPortTrigger',true)
-                            this.handleButtonClick('CreatePortTrigger',false)}}>Join Portfolio</MenuButton>
                         {/**redirect to profile**/}
                         <MenuButton onClick={()=>{this.profile();}}>
                             My Profile</MenuButton>
