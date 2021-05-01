@@ -20,6 +20,8 @@ import {withRouter} from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
 import LoadingSpinner from "../Design/LoadingSpinner";
+import CLSpinner from "../Design/CLSpinner";
+
 import User from "../models/User";
 import UserInfo from "./UserInfo";
 import { api, handleError } from '../helpers/api';
@@ -187,7 +189,7 @@ class Profile extends React.Component{
 
 
         this.state = {
-            portfolios: [],
+            portfolios: null,
             CreatePortTrigger: false,
             JoinPortTrigger: false,
             DropDownTrigger: false,
@@ -381,6 +383,7 @@ class Profile extends React.Component{
 
             this.handleButtonClick('CreatePortTrigger',false)
             this.handleButtonClick('createPortfolioName','')
+            this.setState({portfolios: []});
             this.getPortfolios()
         }
 
@@ -516,7 +519,9 @@ class Profile extends React.Component{
 
                             {/*Container responsible for holding the actual list of Portfolios*/}
                             <PortfolioMediumContainer>
-                                    <PortfolioListContainer>                                {
+                                {!this.state.portfolios ? <CLSpinner/> :
+
+                                <PortfolioListContainer>                                {
                                     this.state.portfolios.map( portfolio => {
                                         return(
                                             <PortfolioContainer key={portfolio.id}>
@@ -525,7 +530,7 @@ class Profile extends React.Component{
                                         );
                                     })}
                                 </PortfolioListContainer>}
-                            </PortfolioMediumContainer>
+                            </PortfolioMediumContainer>}
 
                             {/**Create Portfolio Button and the Pop Up*/}
                             {/**Join Portfolio Button and the Pop Up, display iff current displayed user in the logged in user*/}
