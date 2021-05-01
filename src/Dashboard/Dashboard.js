@@ -17,6 +17,7 @@ import React from "react";
 import styled from "styled-components";
 import User from "../models/User";
 import {api} from "../helpers/api";
+import CLSpinner from "../Design/CLSpinner";
 
 const DashboardBaseContainer = styled(BaseContainer)`
   min-width: 80vw;
@@ -148,7 +149,7 @@ class Dashboard extends React.Component{
 
 
         this.state = {
-            portfolios: [],
+            portfolios: null,
             CreatePortTrigger: false,
             JoinPortTrigger: false,
             DropDownTrigger: false,
@@ -208,6 +209,7 @@ class Dashboard extends React.Component{
 
                             {/*Container responsible for holding the actual list of Portfolios*/}
                             <PortfolioMediumContainer>
+                                {!this.state.portfolios ? <CLSpinner/> :
                                 <PortfolioListContainer>                                {
                                     this.state.portfolios.map( portfolio => {
                                         return(
@@ -218,7 +220,7 @@ class Dashboard extends React.Component{
                                             </PortfolioContainer>
                                         );
                                     })}
-                                </PortfolioListContainer>
+                                </PortfolioListContainer>}
                             </PortfolioMediumContainer>
 
                             {/*Create Portfolio Button and the Pop Up*/}
@@ -368,6 +370,8 @@ class Dashboard extends React.Component{
 
             this.handleButtonClick('CreatePortTrigger',false)
             this.handleButtonClick('createPortfolioName','')
+            this.setState({portfolios: []});
+
             this.getPortfolios()
         }
 

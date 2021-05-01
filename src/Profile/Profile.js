@@ -20,6 +20,8 @@ import {withRouter} from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
 import LoadingSpinner from "../Design/LoadingSpinner";
+import CLSpinner from "../Design/CLSpinner";
+
 import User from "../models/User";
 import UserInfo from "./UserInfo";
 import { api, handleError } from '../helpers/api';
@@ -187,7 +189,7 @@ class Profile extends React.Component{
 
 
         this.state = {
-            portfolios: [],
+            portfolios: null,
             CreatePortTrigger: false,
             JoinPortTrigger: false,
             DropDownTrigger: false,
@@ -223,19 +225,21 @@ class Profile extends React.Component{
     async logout(){
         if (localStorage.getItem('user')){
             try{
+                const parsedUser = new User(JSON.parse(localStorage.getItem('user')))
+
                 /**change the user status to offline**/
                 await api.put(`/users/logout`, {},{
                     headers: {
-                        token: this.state.mainUser.token
+                        token: parsedUser.token
                     }
                 });
 
-                /**update the mainUser with the actual userStatus**/
-                const responseGet = await api.get(`/users/${this.state.mainUser.id}`);
-                const oldPwd = this.state.mainUser.pwd
-                const mainUser = new User(responseGet.data);
-                mainUser.pwd = oldPwd
-                this.state.mainUser = mainUser
+                // /**update the mainUser with the actual userStatus**/
+                // const responseGet = await api.get(`/users/${this.state.mainUser.id}`);
+                // const oldPwd = this.state.mainUser.pwd
+                // const mainUser = new User(responseGet.data);
+                // mainUser.pwd = oldPwd
+                // this.state.mainUser = mainUser
 
             }
             catch (error){
@@ -314,7 +318,7 @@ class Profile extends React.Component{
                         await this.setState({ user: response.data });
                     }
                     catch (error) {
-                        alert(error.message)
+                        alert("User with id: " + id + " does not exist")
                         this.setState({ user: this.state.mainUser })
                         this.props.history.push({
                             pathname: `/profile/${this.state.mainUser.id}`,
@@ -379,6 +383,7 @@ class Profile extends React.Component{
 
             this.handleButtonClick('CreatePortTrigger',false)
             this.handleButtonClick('createPortfolioName','')
+            this.setState({portfolios: []});
             this.getPortfolios()
         }
 
@@ -514,6 +519,8 @@ class Profile extends React.Component{
 
                             {/*Container responsible for holding the actual list of Portfolios*/}
                             <PortfolioMediumContainer>
+                                {!this.state.portfolios ? <CLSpinner/> :
+
                                 <PortfolioListContainer>                                {
                                     this.state.portfolios.map( portfolio => {
                                         return(
@@ -522,8 +529,8 @@ class Profile extends React.Component{
                                             </PortfolioContainer>
                                         );
                                     })}
-                                </PortfolioListContainer>
-                            </PortfolioMediumContainer>
+                                </PortfolioListContainer>}
+                            </PortfolioMediumContainer>}
 
                             {/**Create Portfolio Button and the Pop Up*/}
                             {/**Join Portfolio Button and the Pop Up, display iff current displayed user in the logged in user*/}
