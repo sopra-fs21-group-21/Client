@@ -50,6 +50,9 @@ class AppRouter extends React.Component{
                     <Route exact path = '/portfolio/:id' render = {(props) => (
                         <PortfolioIdGuard><Portfolio {...props}/></PortfolioIdGuard>
                     )}/>
+                    <Route exact path = '/portfolio/' render = {(props) => (
+                        <DashBoardGuard><Dashboard/></DashBoardGuard>
+                    )}/>
                 </Switch>
             </BrowserRouter>
         );
