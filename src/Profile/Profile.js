@@ -316,7 +316,7 @@ class Profile extends React.Component{
                         await this.setState({ user: response.data });
                     }
                     catch (error) {
-                        alert(error.message)
+                        alert("User with id: " + id + " does not exist")
                         this.setState({ user: this.state.mainUser })
                         this.props.history.push({
                             pathname: `/profile/${this.state.mainUser.id}`,
@@ -516,7 +516,7 @@ class Profile extends React.Component{
 
                             {/*Container responsible for holding the actual list of Portfolios*/}
                             <PortfolioMediumContainer>
-                                <PortfolioListContainer>                                {
+                                    <PortfolioListContainer>                                {
                                     this.state.portfolios.map( portfolio => {
                                         return(
                                             <PortfolioContainer key={portfolio.id}>
@@ -524,7 +524,7 @@ class Profile extends React.Component{
                                             </PortfolioContainer>
                                         );
                                     })}
-                                </PortfolioListContainer>
+                                </PortfolioListContainer>}
                             </PortfolioMediumContainer>
 
                             {/**Create Portfolio Button and the Pop Up*/}
