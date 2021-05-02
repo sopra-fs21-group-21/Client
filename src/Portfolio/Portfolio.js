@@ -186,6 +186,10 @@ const OpenPositionContainer = styled.div`
 const OpenPositionButton = styled(Button)`
     width: 60%;
     height: 11%;
+  &:focus {
+    background-color: rgba(255,173,78,0.8);
+    box-shadow: 1px 1px 3px 2px rgba(255, 173, 0, 0.3);
+  }
 `
 
 const parsedUser = new User(JSON.parse(localStorage.getItem('user')))
@@ -273,7 +277,8 @@ class Dashboard extends React.Component{
 
                         {/*Labels*/}
                         <BalanceLabelContainer>
-                            <BalanceLabel>current balance: {this.state.portfolio.balance} CHF</BalanceLabel>
+                            {this.state.portfolio.balance != undefined ?
+                            <BalanceLabel>current balance: {this.state.portfolio.balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} CHF</BalanceLabel>:""}
                         </BalanceLabelContainer>
 
                         <PositionLabelContainer>

@@ -170,6 +170,10 @@ const CreatePortfolioButton = styled(Button)`
   width: 40%;
   margin-left: 10%;
   margin-right: 10%;
+  &:focus {
+    background-color: rgba(255,173,78,0.8);
+    box-shadow: 1px 1px 3px 2px rgba(255, 173, 0, 0.3);
+  }
 `
 
 
@@ -519,7 +523,7 @@ class Profile extends React.Component{
                                         );
                                     })}
                                 </PortfolioListContainer>}
-                            </PortfolioMediumContainer>}
+                            </PortfolioMediumContainer>
 
                             {/**Create Portfolio Button and the Pop Up*/}
                             {/**Join Portfolio Button and the Pop Up, display iff current displayed user in the logged in user*/}
