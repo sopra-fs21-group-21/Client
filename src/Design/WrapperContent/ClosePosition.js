@@ -4,6 +4,8 @@ import {Label} from "../Label";
 import {InputField} from "../InputField";
 import {Button} from "../Button";
 import { withRouter } from 'react-router-dom';
+import {api} from "../../helpers/api";
+import User from "../../models/User";
 
 const OverheadLabelContainer = styled.div`
   width: 100%;
@@ -94,10 +96,22 @@ class ClosePosition extends React.Component{
                     <AmountReturned>Realized Gain/Loss: </AmountReturned>
                 </AmountReturnedContainer>
                 <ButtonContainer>
-                    <ClosePositionButton>Close Position</ClosePositionButton>
+                    <ClosePositionButton onClick = {()=>{
+                        this.closePositions()
+                        this.props.setTrigger('ClosePositionTrigger',false)
+                    }}>Close Position</ClosePositionButton>
                 </ButtonContainer>
             </ClosePositionBaseContainer>
         );
+    }
+
+    async closePositions(){
+        const requestUrl = '/portfolios/' + this.props.portfolioId + '/' + this.props.positionId;
+        const tempUser = new User(JSON.parse(localStorage.getItem('user')));
+
+        await api.delete(requestUrl,{headers:{
+                token: tempUser.token
+        }});
     }
 }
 

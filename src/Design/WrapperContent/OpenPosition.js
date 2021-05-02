@@ -285,6 +285,8 @@ class OpenPosition extends React.Component{
             }
         });
 
+        this.props.setTrigger('OpenPositionTrigger',false)
+
         console.log(response);
     }
 

@@ -186,10 +186,11 @@ const OpenPositionContainer = styled.div`
 const OpenPositionButton = styled(Button)`
     width: 60%;
     height: 11%;
-  &:focus {
-    background-color: rgba(255,173,78,0.8);
-    box-shadow: 1px 1px 3px 2px rgba(255, 173, 0, 0.3);
-  }
+    min-height: 3vh;
+    &:focus {
+      background-color: rgba(255,173,78,0.8);
+      box-shadow: 1px 1px 3px 2px rgba(255, 173, 0, 0.3);
+    }
 `
 
 const parsedUser = new User(JSON.parse(localStorage.getItem('user')))
@@ -204,7 +205,8 @@ class Dashboard extends React.Component{
             positions: [],
             ClosePositionTrigger: false,
             OpenPositionTrigger: false,
-            mainUser:parsedUser
+            mainUser:parsedUser,
+            closePositionId: null
         }
 
         this.handleButtonClick=this.handleButtonClick.bind(this);
@@ -306,11 +308,11 @@ class Dashboard extends React.Component{
                                 </OpenPositionContainer>
 
                                 <OpenPositionWrapper trigger={this.state.OpenPositionTrigger} setTrigger={this.handleButtonClick}>
-                                    <OpenPosition portfolio = {this.state.portfolio} windowTrigger = {this.state.OpenPositionTrigger}/>
+                                    <OpenPosition portfolio = {this.state.portfolio} setTrigger = {this.handleButtonClick}/>
                                 </OpenPositionWrapper>
 
                                 <ClosePositionWrapper trigger={this.state.ClosePositionTrigger} setTrigger={this.handleButtonClick}>
-                                    <ClosePosition/>
+                                    <ClosePosition positionId = {this.state.closePositionId} portfolioId = {this.state.portfolio.id} setTrigger={this.handleButtonClick}/>
                                 </ClosePositionWrapper>
                             </TraderMidFormContainer>
                         </PortfolioFormContainer>
