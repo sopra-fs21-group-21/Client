@@ -288,6 +288,8 @@ class OpenPosition extends React.Component{
         this.props.setTrigger('OpenPositionTrigger',false)
 
         console.log(response);
+
+        this.props.reloadPortfolio(this.props.portfolio.id);
     }
 
     async search(){

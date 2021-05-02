@@ -210,6 +210,7 @@ class Dashboard extends React.Component{
         }
 
         this.handleButtonClick=this.handleButtonClick.bind(this);
+        this.getPortfolio=this.getPortfolio.bind(this);
     }
 
     profile(){
@@ -308,11 +309,11 @@ class Dashboard extends React.Component{
                                 </OpenPositionContainer>
 
                                 <OpenPositionWrapper trigger={this.state.OpenPositionTrigger} setTrigger={this.handleButtonClick}>
-                                    <OpenPosition portfolio = {this.state.portfolio} setTrigger = {this.handleButtonClick}/>
+                                    <OpenPosition portfolio = {this.state.portfolio} setTrigger = {this.handleButtonClick} reloadPortfolio={this.getPortfolio}/>
                                 </OpenPositionWrapper>
 
                                 <ClosePositionWrapper trigger={this.state.ClosePositionTrigger} setTrigger={this.handleButtonClick}>
-                                    <ClosePosition positionId = {this.state.closePositionId} portfolioId = {this.state.portfolio.id} setTrigger={this.handleButtonClick}/>
+                                    <ClosePosition positionId = {this.state.closePositionId} portfolioId = {this.state.portfolio.id} setTrigger={this.handleButtonClick} reloadPortfolio={this.getPortfolio}/>
                                 </ClosePositionWrapper>
                             </TraderMidFormContainer>
                         </PortfolioFormContainer>

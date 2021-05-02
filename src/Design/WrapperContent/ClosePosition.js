@@ -112,6 +112,8 @@ class ClosePosition extends React.Component{
         await api.delete(requestUrl,{headers:{
                 token: tempUser.token
         }});
+
+        this.props.reloadPortfolio(this.props.portfolioId);
     }
 }
 
