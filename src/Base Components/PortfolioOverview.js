@@ -27,7 +27,7 @@ const PortfolioOverview = ({portfolio}) => {
         <PortfolioContainer>
             <InfoTag>ID: {portfolio.id} </InfoTag>
             <InfoTag>Name: {portfolio.name} </InfoTag>
-            <InfoTag>Balance: {portfolio.cash} </InfoTag>
+            <InfoTag>Balance: {portfolio.balance} </InfoTag>
             <InfoTag>Performance: {portfolio.performance} </InfoTag>
         </PortfolioContainer>
     );

@@ -301,7 +301,7 @@ class Dashboard extends React.Component{
                                 </OpenPositionContainer>
 
                                 <OpenPositionWrapper trigger={this.state.OpenPositionTrigger} setTrigger={this.handleButtonClick}>
-                                    <OpenPosition portfolio = {this.state.portfolio}/>
+                                    <OpenPosition portfolio = {this.state.portfolio} windowTrigger = {this.state.OpenPositionTrigger}/>
                                 </OpenPositionWrapper>
 
                                 <ClosePositionWrapper trigger={this.state.ClosePositionTrigger} setTrigger={this.handleButtonClick}>

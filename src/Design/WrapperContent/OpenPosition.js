@@ -4,6 +4,8 @@ import {Label} from "../Label";
 import {InputField} from "../InputField";
 import {Button} from "../Button";
 import { withRouter } from 'react-router-dom';
+import User from "../../models/User";
+import {api} from "../../helpers/api";
 
 const BaseContainer = styled.div`
     width:100%;
@@ -159,7 +161,8 @@ const OpenButtonContainer = styled.div`
     flex-direction: row;
     justify-content: center;
     align-items: flex-start;
-    margin-top: 5%;
+    margin-top: 2%;
+    margin-bottom: 2%;
 `
 
 const OpenButton = styled(Button)`
@@ -178,7 +181,7 @@ class OpenPosition extends React.Component{
             weeklyChange: '',
             yearToDate: '',
             priceAsOf: '',
-            pricePerShare: 25,
+            pricePerShare: 0,
             shareAmount: 0,
             stockSearch: '',
             stockType: null
@@ -204,7 +207,9 @@ class OpenPosition extends React.Component{
                 </CodeSearchContainer>
 
                 <SearchButtonContainer>
-                    <SearchButton>Search</SearchButton>
+                    <SearchButton onClick={()=>{
+                        this.search()
+                    }}>Search</SearchButton>
                 </SearchButtonContainer>
 
                 <StockInfoBaseContainer>
@@ -247,20 +252,55 @@ class OpenPosition extends React.Component{
 
                 <LongShortButtonContainer>
                     <LongShortButton onClick={()=>{
-                      this.handleButtonClick('stockType','Long')
+                      this.handleButtonClick('stockType','STOCK_LONG')
                     }}>Long</LongShortButton>
 
                     <LongShortButton onClick={()=>{
-                        this.handleButtonClick('stockType','Short')
+                        this.handleButtonClick('stockType','STOCK_SHORT')
                     }}>Short</LongShortButton>
                 </LongShortButtonContainer>
 
                 <OpenButtonContainer>
-                    <OpenButton>Open</OpenButton>
+                    <OpenButton onClick = {()=>{
+                        this.openPosition()
+                    }}>Open</OpenButton>
                 </OpenButtonContainer>
 
             </BaseContainer>
         );
+    }
+
+    async openPosition(){
+        const tempUser = new User(JSON.parse(localStorage.getItem('user')));
+        const requestUrl = 'portfolios/' + this.props.portfolio.id;
+        const requestBody = {
+            'code': this.state.stockSearch,
+            'amount': this.state.shareAmount,
+            'type': this.state.stockType
+        }
+
+        const response = await api.post(requestUrl,requestBody,{
+            headers: {
+                token: tempUser.token
+            }
+        });
+
+        console.log(response);
+    }
+
+    async search(){
+        const tempUser = new User(JSON.parse(localStorage.getItem('user')));
+        const requestUrl = 'positions/' + this.state.stockSearch;
+
+        const response = await api.get(requestUrl, {
+            headers: {
+                token: tempUser.token
+            }
+        });
+
+        console.log(response.data);
+
+        this.setState({'pricePerShare': response.data});
     }
 }
 
