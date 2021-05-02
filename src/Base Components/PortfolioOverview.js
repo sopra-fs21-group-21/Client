@@ -8,7 +8,7 @@ const PortfolioContainer = styled.div`
   border-radius: 25px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   flex-direction: row;
   border: none;
   outline: none;
@@ -27,7 +27,7 @@ const PortfolioOverview = ({portfolio}) => {
         <PortfolioContainer>
             <InfoTag>ID: {portfolio.id} </InfoTag>
             <InfoTag>Name: {portfolio.name} </InfoTag>
-            <InfoTag>Balance: {portfolio.cash} </InfoTag>
+            <InfoTag>Balance: {portfolio.balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} </InfoTag>
             <InfoTag>Performance: {portfolio.performance} </InfoTag>
         </PortfolioContainer>
     );
