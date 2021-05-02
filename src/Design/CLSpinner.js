@@ -3,9 +3,9 @@ import "./ColoredLoadingSpinner.css";
 
 
 
-const LoadingSpinner = () => {
+const CLSpinner = () => {
     return(
-        <div className="lds-ring" style={{marginLeft:'30vh'}}>
+        <div className="lds-ring2" >
             <div></div>
             <div></div>
             <div></div>
@@ -15,4 +15,4 @@ const LoadingSpinner = () => {
     );
 };
 
-export default LoadingSpinner;
+export default CLSpinner;
