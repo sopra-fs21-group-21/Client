@@ -206,7 +206,8 @@ class Dashboard extends React.Component{
             ClosePositionTrigger: false,
             OpenPositionTrigger: false,
             mainUser:parsedUser,
-            closePositionId: null
+            closePositionId: null,
+            allowChanges: false
         }
 
         this.handleButtonClick=this.handleButtonClick.bind(this);
@@ -224,6 +225,8 @@ class Dashboard extends React.Component{
     async componentDidMount(){
         let testId = this.props.match.params.id;
         await this.getPortfolio(testId);
+
+        await this.setPermissions(testId)
     }
 
     render(){
@@ -295,7 +298,7 @@ class Dashboard extends React.Component{
                                     {this.state.positions.map( position => {
                                         return(
                                             <PositionListElement key={position.id}>
-                                                <PositionOverview position={position} setTrigger={this.handleButtonClick}/>
+                                                <PositionOverview position={position} setTrigger={this.handleButtonClick} allowChanges={this.state.allowChanges}/>
                                             </PositionListElement>
                                         );
                                     })}
@@ -305,6 +308,7 @@ class Dashboard extends React.Component{
                                     <OpenPositionButton
                                     onClick = {() => {this.handleButtonClick('OpenPositionTrigger',true);
                                     }}
+                                    disabled = {!this.state.allowChanges}
                                     >Open Position</OpenPositionButton>
                                 </OpenPositionContainer>
 
@@ -401,6 +405,26 @@ class Dashboard extends React.Component{
     routeProfile(id) {
         const pathUrl = '/profile/' + id;
         this.props.history.push(pathUrl);
+    }
+
+    async setPermissions(portId){
+        const tempUser = new User(JSON.parse(localStorage.getItem('user')));
+
+        const requestUrl = 'users/' + tempUser.id;
+        const response = await api.get(requestUrl, {});
+
+        const tempPorts = response.data.collaboratingPortfolios;
+        const tempPorts2 = response.data.ownedPortfolios;
+        const tempPorts3 = tempPorts.concat(tempPorts2)
+
+        tempPorts3.forEach(element => {
+                if(element.id == portId){
+                    this.setState({'allowChanges':true});
+                }
+            }
+        );
+
+        console.log(this.state.allowChanges);
     }
 }
 

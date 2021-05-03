@@ -57,7 +57,9 @@ const PositionOverview = (props) => {
                 <ClosePositionButton onClick = {() => {
                     props.setTrigger('ClosePositionTrigger',true)
                     props.setTrigger('closePositionId',props.position.id)
-                }}>
+                }}
+                disabled = {!props.allowChanges}
+                >
                     Close
                 </ClosePositionButton>
             </ButtonContainer>

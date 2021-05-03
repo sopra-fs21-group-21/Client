@@ -189,7 +189,6 @@ class Profile extends React.Component{
 
         const parsedUser = new User(JSON.parse(localStorage.getItem('user')))
 
-
         this.state = {
             portfolios: null,
             CreatePortTrigger: false,
@@ -240,7 +239,6 @@ class Profile extends React.Component{
             localStorage.removeItem('user')
         }
         this.props.history.push('/login');
-
     }
 
     async updateData(){
@@ -282,10 +280,7 @@ class Profile extends React.Component{
 
                 }
             console.log(error)
-
         }
-
-
     }
 
     async componentDidMount() {
@@ -325,7 +320,6 @@ class Profile extends React.Component{
             this.props.history.push('/dashboard')
         }
         this.getPortfolios();
-
     }
 
 
@@ -343,11 +337,16 @@ class Profile extends React.Component{
 
     async getPortfolios(){
         try {
-            const requestUrl = 'users/' + this.state.user.id;
+            let testId = this.props.match.params.id;
+
+            const requestUrl = 'users/' + testId;
             const response = await api.get(requestUrl, {});
 
-            console.log(response.data)
-            this.setState({portfolios: response.data.ownedPortfolios});
+            const tempPorts = response.data.collaboratingPortfolios;
+            const tempPorts2 = response.data.ownedPortfolios;
+            const tempPorts3 = tempPorts.concat(tempPorts2)
+
+            this.setState({portfolios: tempPorts3});
             console.log(this.state.portfolios);
         }
 
@@ -620,7 +619,6 @@ class Profile extends React.Component{
             this.handleButtonClick('portfolioCode',null)}
         catch (error){
             alert(error.response.data.message)
-
         }
     }
 
