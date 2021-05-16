@@ -7,8 +7,12 @@ import {withRouter} from "react-router-dom";
 import React from "react";
 import styled from "styled-components";
 
+
+
 import { api, handleError } from '../helpers/api';
 import User from "../models/User";
+import ForgotPwdWrapper from "../Design/Wrappers/ForgotPwdWrapper";
+
 
 const ForgotPassword = styled(Label)`
 
@@ -59,8 +63,14 @@ class Login extends React.Component{
         this.state = {
             username: null,
             password:null,
-            user:null
+            user:null,
+            forgotPwdTrigger: false,
+            mail:null,
+            usernameF:null,
+            validMail:false
         };
+
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
     register(){
@@ -122,7 +132,7 @@ class Login extends React.Component{
                 <StandardInputField type="password" placeholder = 'Enter here...' onChange={e => {
                     this.handleInputChange('password', e.target.value);
                 }}/>
-                <ForgotPassword>forgot your password?</ForgotPassword>
+                <ForgotPassword onClick={() => {this.handleInputChange('forgotPwdTrigger',true);}}>forgot your password?</ForgotPassword>
                 <StandardButton type="submit"
                                 disabled={!this.state.username || !this.state.password}
                                 onClick={() => {this.login();}}
@@ -130,10 +140,65 @@ class Login extends React.Component{
                 <StandardButton
                 onClick={() => {this.register();}}
                 >Register</StandardButton>
+
+
+
+                <ForgotPwdWrapper trigger={this.state.forgotPwdTrigger} setTrigger={this.handleInputChange}>
+                    <StandardBaseContainer style={{width:'100%'}}>
+
+                    <StandardLabel>Username:</StandardLabel>
+                    <StandardInputField placeholder = 'Enter here...'               onChange={e => {
+                        this.handleInputChange('usernameF', e.target.value);
+                    }}/>
+
+                    <StandardLabel>Email:</StandardLabel>
+                    <StandardInputField placeholder = 'Enter here...'               onChange={e => {
+                        this.handleInputChange('mail', e.target.value);
+                        this.emailVerify(e.target.value);
+                    }}/>
+
+                        <StandardButton type="submit"
+                                        disabled={!this.state.usernameF || !this.state.mail || !this.state.validMail}
+                                        onClick={() => {this.sendMail();}}
+                        >Submit</StandardButton>
+                    </StandardBaseContainer>
+                </ForgotPwdWrapper>
+
             </StandardBaseContainer>
         </Background>
         );
     }
+
+    async sendMail() {
+        try {
+            const requestBody = JSON.stringify({
+                username: this.state.usernameF,
+                mail: this.state.mail
+            });
+            const response = await api.put('/users/forgotPassword', requestBody)
+            alert("Please check your email-box, an E-mail is sent to you with further information.")
+        }
+
+        catch (error) {
+            alert(`Something went wrong during the submitting your data: \n${handleError(error)}`);
+            console.log(error)
+        }
+
+    }
+
+    emailVerify( email ) {
+
+        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if ( re.test(email) ) {
+            this.setState({validMail:true})
+        }
+        else {
+            this.setState({validMail:false})
+        }
+
+    }
+
 }
 
 export default withRouter(Login);
