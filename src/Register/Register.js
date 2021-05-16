@@ -63,7 +63,8 @@ class Register extends React.Component{
             username: null,
             email:null,
             password:null,
-            repeatedPwd:null
+            repeatedPwd:null,
+            validMail:false
         };
     }
 
@@ -110,8 +111,9 @@ class Register extends React.Component{
                         this.handleInputChange('username', e.target.value);
                     }}/>
                     <StandardLabel >Email:</StandardLabel>
-                    <StandardInputField  type="email" placeholder = 'Enter here...' onChange={e => {
+                    <StandardInputField  type="email" placeholder = 'example@example.example' onChange={e => {
                         this.handleInputChange('email', e.target.value);
+                        this.emailVerify(e.target.value);
                     }}/>
                     <StandardLabel >Password:</StandardLabel>
                     <StandardInputField type="password" placeholder = 'Enter here...' onChange={e => {
@@ -121,7 +123,7 @@ class Register extends React.Component{
                     <StandardInputField  type="password" placeholder = 'Enter here...' onChange={e => {
                         this.handleInputChange('repeatedPwd', e.target.value);
                     }}/>
-                    <StandardButton   disabled={!this.state.username || !this.state.password || !this.state.repeatedPwd || !this.state.email || !(this.state.repeatedPwd===this.state.password)}
+                    <StandardButton   disabled={!this.state.validMail || !this.state.username || !this.state.password || !this.state.repeatedPwd || !this.state.email || !(this.state.repeatedPwd===this.state.password)}
                                       onClick={() => {this.register();}}
                     >Register</StandardButton>
                     <Link  to="/login"><AlreadyAccount style={{cursor: 'pointer'}} as='button'
@@ -131,6 +133,22 @@ class Register extends React.Component{
             </Background>
         );
     }
+
+
+    emailVerify( email ) {
+
+        // don't remember from where i copied this code, but this works.
+        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if ( re.test(email) ) {
+            this.setState({validMail:true})
+        }
+        else {
+            this.setState({validMail:false})
+        }
+
+    }
+
 }
 
 export default Register;
