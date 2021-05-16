@@ -9,6 +9,7 @@ import MenuItem from "../Design/MenuItem";
 import MenuPopUpWrapper from "../Design/Wrappers/MenuPopUpWrapper";
 import ClosePositionWrapper from "../Design/Wrappers/ClosePositionWrapper";
 import OpenPositionWrapper from "../Design/Wrappers/OpenPositionWrapper";
+import ChatPopUpWrapper from "../Design/Wrappers/ChatPopUpWrapper";
 import TraderOverview from "../Base Components/TraderOverview";
 import {withRouter} from "react-router-dom";
 import React from "react";
@@ -16,6 +17,8 @@ import styled from "styled-components";
 import PositionOverview from "../Base Components/PositionOverview";
 import ClosePosition from "../Design/WrapperContent/ClosePosition";
 import OpenPosition from "../Design/WrapperContent/OpenPosition";
+import Chat from "../Design/WrapperContent/Chat";
+import ChatBubble from "../Design/SVGs/ChatBubble";
 import {api} from "../helpers/api";
 import User from "../models/User";
 
@@ -122,9 +125,20 @@ const MenuBarContainer = styled.div`
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-start;
-  min-width: 10vw;
+  min-width: 4vw;
   min-height: 100vh;
-  margin-left: 20px;
+`
+
+const ChatBubbleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  min-width: 4vw;
+  min-height: 100vh;
+  padding-top: 4vh;
+  padding-left: 2vw;
+  margin-right: 1%;
 `
 
 const TraderListContainer = styled(ListContainer)`
@@ -193,6 +207,16 @@ const OpenPositionButton = styled(Button)`
     }
 `
 
+const ChatButtonWrapper = styled.div`
+  width:100%;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 2%;
+  min-height: 2vh;
+  align-items: center;
+  justify-content: flex-start;
+`
+
 const parsedUser = new User(JSON.parse(localStorage.getItem('user')))
 
 class Dashboard extends React.Component{
@@ -205,6 +229,7 @@ class Dashboard extends React.Component{
             positions: [],
             ClosePositionTrigger: false,
             OpenPositionTrigger: false,
+            ChatTrigger: false,
             mainUser:parsedUser,
             closePositionId: null,
             allowChanges: false
@@ -323,6 +348,18 @@ class Dashboard extends React.Component{
                         </PortfolioFormContainer>
                     </OverViewContainer>
                 </DashboardBaseContainer>
+
+                {/*Chat Menu Top Right*/}
+                <ChatBubbleContainer>
+                    <ChatButtonWrapper onClick={() => {
+                        this.handleButtonClick('ChatTrigger',true)
+                    }}>
+                        <ChatBubble/>
+                    </ChatButtonWrapper>
+                    <ChatPopUpWrapper trigger = {this.state.ChatTrigger} setTrigger={this.handleButtonClick}>
+                        <Chat portfolio = {this.state.portfolio}/>
+                    </ChatPopUpWrapper>
+                </ChatBubbleContainer>
 
                 {/*Menu Bar Top Right*/}
                 <MenuBarContainer onClick={() => {

@@ -285,7 +285,6 @@ class Profile extends React.Component{
 
     async componentDidMount() {
         try {
-
             if (this.props.location.state !== undefined){
                 await this.setState({ user: this.props.location.state.user});
             }
@@ -569,6 +568,7 @@ class Profile extends React.Component{
                                 }}>+Create Portfolio</CreatePortfolioButton>
                                 <br/>
                             </CreatePortfolioWrapper>
+
                             <JoinPortfolioWrapper trigger = {this.state.JoinPortTrigger} setTrigger = {this.handleButtonClick}>
                                 <br/>
                                 <Label>Portfolio Code:</Label>
