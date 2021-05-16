@@ -7,6 +7,7 @@ import {api} from "../../helpers/api";
 import ListContainer from "../ListContainer";
 import ListElement from "../ListElement";
 import User from "../../models/User";
+import MessageOverview from "../../Base Components/MessageOverview";
 
 const ChatBaseContainer = styled.div`
   width: 100%;
@@ -68,7 +69,8 @@ class Chat extends React.Component{
         super(props);
 
         this.state = {
-            message: ''
+            message: '',
+            messageList: []
         }
     }
 
@@ -89,6 +91,23 @@ class Chat extends React.Component{
                 token: tempUser.token
             }
         });
+
+        await this.refreshChat()
+    }
+
+    async refreshChat(){
+        const requestUrl = '/portfolios/' + this.props.portfolio.id + '/chat'
+        const tempUser = new User(JSON.parse(localStorage.getItem('user')));
+
+        const response = await api.get(requestUrl, {
+            headers: {
+                token: tempUser.token
+            }
+        });
+
+        this.setState({'messageList':response.data.messageList})
+
+        console.log(this.state.messageList)
     }
 
     render(){
@@ -97,7 +116,13 @@ class Chat extends React.Component{
                 <ChatDisplayContainer>
                     <Messages>
                         <MessageContainer>
-
+                            {this.state.messageList.map( message => {
+                                return(
+                                    <Message key={message.id}>
+                                        <MessageOverview message={message}/>
+                                    </Message>
+                                );
+                            })}
                         </MessageContainer>
                     </Messages>
                 </ChatDisplayContainer>
