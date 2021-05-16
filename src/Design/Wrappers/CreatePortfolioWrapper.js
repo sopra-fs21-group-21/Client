@@ -19,13 +19,12 @@ const PopUpBaseContainer = styled.div`
   top: 40%;
 `
 const XWrapper = styled.div`
+  top: 0;
   width:100%;
   display: flex;
   flex-direction: row;
   margin-bottom: 2%;
-  min-height: 2vh;
   align-items: center;
-  justify-content: flex-start;
 `;
 
 const SecondaryContainer = styled.div`

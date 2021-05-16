@@ -263,6 +263,7 @@ class OpenPosition extends React.Component{
                 <OpenButtonContainer>
                     <OpenButton onClick = {()=>{
                         this.openPosition()
+                        this.props.setTrigger('OpenPositionTrigger',false)
                     }}>Open</OpenButton>
                 </OpenButtonContainer>
 
