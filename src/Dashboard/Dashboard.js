@@ -59,6 +59,7 @@ const PortfolioMediumContainer = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
+    overflow-y: scroll;
 `
 
 const OverViewContainer = styled.div`
@@ -158,6 +159,7 @@ class Dashboard extends React.Component{
             portfolioCode: null,
             createPortfolioName: null,
             portfolioVisibility: 'private',
+            allPublicPorts: null
         }
 
         this.handleButtonClick=this.handleButtonClick.bind(this);
@@ -165,6 +167,7 @@ class Dashboard extends React.Component{
 
     async componentDidMount(){
         await this.getPortfolios();
+        await this.getAllPublicPortfolios();
     }
 
     profile(){
@@ -283,9 +286,27 @@ class Dashboard extends React.Component{
 
                     {/*Leaderboard*/}
                     <OverViewContainer>
+
                         <LeaderboardLabel>Leaderboard</LeaderboardLabel>
-                        <LeaderboardFormContainer>
-                        </LeaderboardFormContainer>
+
+                        <PortfolioFormContainer>
+                            <Label style={{color:'#D86969'}}>THIS LEADERBOARD CONTAINS ALL AVAILABLE PUBLIC PORTFOLIOS, SORTED BY WEEKLY PERFORMANCE: </Label>
+
+                            <PortfolioMediumContainer>
+                                {!this.state.allPublicPorts ? <CLSpinner/> :
+                                    <PortfolioListContainer>                                {
+                                        this.state.allPublicPorts.map( portfolio => {
+                                            return(
+                                                <PortfolioContainer key={portfolio.id} onClick = {() => {
+                                                    this.routePortfolio(portfolio.id)
+                                                }}>
+                                                    <PortfolioOverview portfolio={portfolio}/>
+                                                </PortfolioContainer>
+                                            );
+                                        })}
+                                    </PortfolioListContainer>}
+                            </PortfolioMediumContainer>
+                        </PortfolioFormContainer>
                     </OverViewContainer>
 
                 </DashboardBaseContainer>
@@ -365,6 +386,7 @@ class Dashboard extends React.Component{
             this.setState({portfolios: []});
 
             this.getPortfolios()
+            this.getAllPublicPortfolios()
         }
 
         catch(error){
@@ -384,6 +406,24 @@ class Dashboard extends React.Component{
             const tempPorts3 = tempPorts.concat(tempPorts2)
 
             this.setState({portfolios: tempPorts3});
+        }
+
+        catch(error){
+            alert(error.response.data.message)
+        }
+    }
+
+    async getAllPublicPortfolios(){
+        try {
+
+            const response = await api.get(`/portfolios/`, {
+                headers: {
+                    token: this.state.user.token,
+                    sort: "weekly"
+                }
+            });
+
+            this.setState({allPublicPorts: response.data });
         }
 
         catch(error){

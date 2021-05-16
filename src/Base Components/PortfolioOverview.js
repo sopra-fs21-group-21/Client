@@ -28,7 +28,7 @@ const PortfolioOverview = ({portfolio}) => {
             <InfoTag>ID: {portfolio.id} </InfoTag>
             <InfoTag>Name: {portfolio.name} </InfoTag>
             <InfoTag>Balance: {portfolio.balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} </InfoTag>
-            <InfoTag>Performance: {portfolio.performance} </InfoTag>
+            <InfoTag>Performance: {portfolio.weeklyPerformance} </InfoTag>
         </PortfolioContainer>
     );
 };

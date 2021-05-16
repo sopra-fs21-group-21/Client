@@ -5,8 +5,8 @@ import XSvg from "../../Design/SVGs/XSvg";
 import {Popup} from "./PopUp";
 
 const PopUpBaseContainer = styled.div`
-  min-width: 35vw;
-  min-height: 20vh;
+  min-width: 30vw;
+  min-height: 60%;
   background-color: rgba(211,211,211,1);
   display: flex;
   flex-direction: column;
@@ -16,13 +16,14 @@ const PopUpBaseContainer = styled.div`
   border-radius: 20px;
   position: absolute;
   padding: 1%;
-  top: 40%;
+  right: 34%;
+  top: 18%;
 `
 const XWrapper = styled.div`
-  top: 0;
+  top: 2vh;
+  left: 2vh;
   width:100%;
-  display: flex;
-  flex-direction: row;
+  position: absolute;
   margin-bottom: 2%;
   align-items: center;
 `;
@@ -33,13 +34,13 @@ const SecondaryContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   width:100%;
-  height:26vh;
+  height:22vh;
   background: rgb(29,26,26);
   border: none;
   border-radius: 20px;
 `;
 
-class CreatePortfolioWrapper extends React.Component{
+class ForgotPwdWrapper extends React.Component{
 
     constructor(props){
         super(props);
@@ -48,9 +49,9 @@ class CreatePortfolioWrapper extends React.Component{
     render() {
         return (
             this.props.trigger ? (
-    <Popup>  <PopUpBaseContainer>
+                <Popup> <PopUpBaseContainer>
                     <XWrapper onClick={() =>
-                        this.props.setTrigger("CreatePortTrigger",false)
+                        this.props.setTrigger("forgotPwdTrigger",false)
                     }>
                         <XSvg/>
                     </XWrapper>
@@ -63,4 +64,4 @@ class CreatePortfolioWrapper extends React.Component{
     }
 }
 
-export default withRouter(CreatePortfolioWrapper);
+export default withRouter(ForgotPwdWrapper);

@@ -91,6 +91,8 @@ const PortfolioMediumContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
+
 `
 
 const OverViewContainer = styled.div`
@@ -202,7 +204,7 @@ class Profile extends React.Component{
             createPortfolioName: null,
             // user is either the same user as mainUser or other one, if this is the case change information
             // buttons wont be displayed
-            user: null,
+            user: parsedUser,
             mainUser:parsedUser,
 
             username:null,
@@ -220,10 +222,15 @@ class Profile extends React.Component{
         this.setState({ [key]: bool });
     }
 
+    async componentWillMount(){
+        const parsedUser = new User(JSON.parse(localStorage.getItem('user')))
+        this.setState({mainUser:parsedUser})
+    }
+
     async logout(){
         if (localStorage.getItem('user')){
             try{
-                const parsedUser = new User(JSON.parse(localStorage.getItem('user')))
+                const parsedUser = await new User(JSON.parse(localStorage.getItem('user')))
 
                 /**change the user status to offline**/
                 await api.put(`/users/logout`, {},{
@@ -290,7 +297,7 @@ class Profile extends React.Component{
             }
             else{
                 const { id } = this.props.match.params;
-                if (id === undefined) {this.setState({ user: this.state.mainUser });
+                if (id === undefined) {await this.setState({ user: this.state.mainUser });
                     this.props.history.push({
                         pathname: `/profile/${this.state.mainUser.id}`,
                     });
@@ -336,7 +343,11 @@ class Profile extends React.Component{
 
     async getPortfolios(){
         try {
-            let testId = this.props.match.params.id;
+            if (this.props.location.state !== undefined){
+            var testId = this.props.location.state.user.id;
+            console.log("enterred 1")}
+
+            else testId = this.props.match.params.id
 
             const requestUrl = 'users/' + testId;
             const response = await api.get(requestUrl, {});
@@ -350,7 +361,7 @@ class Profile extends React.Component{
         }
 
         catch(error){
-            alert('Something went wrong')
+            console.log(error)
         }
     }
 
@@ -526,22 +537,19 @@ class Profile extends React.Component{
                             {/**Create Portfolio Button and the Pop Up*/}
                             {/**Join Portfolio Button and the Pop Up, display iff current displayed user in the logged in user*/}
 
-                            {!this.state.user ? "" :
-                                <Container style={{width:'100%'}}>
+
                                     {this.state.mainUser.token === this.state.user.token ?
-                                        <ButtonContainer>
                                             <DashBoardButton onClick={() => {
                                                 this.handleButtonClick('JoinPortTrigger',false)
                                                 this.handleButtonClick('CreatePortTrigger',true)                            }}>
                                                 Create Portfolio
-                                            </DashBoardButton>
+                                            </DashBoardButton>:""}
+                                    {this.state.mainUser.token === this.state.user.token  ?
                                             <DashBoardButton onClick={() => {
                                                 this.handleButtonClick('JoinPortTrigger',true)
                                                 this.handleButtonClick('CreatePortTrigger',false)                            }}>
                                                 Join Existing Portfolio
-                                            </DashBoardButton>
-                                        </ButtonContainer>:""}
-                                </Container> }
+                                            </DashBoardButton>:""}
 
 
                             {/**Create and Join Port Wrappers**/}
