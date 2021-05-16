@@ -177,6 +177,10 @@ class Login extends React.Component{
             });
             const response = await api.put('/users/forgotPassword', requestBody)
             alert("Please check your email-box, an E-mail is sent to you with further information.")
+            this.handleInputChange('forgotPwdTrigger',false)
+            this.handleInputChange('usernameF',null)
+            this.handleInputChange('mail',null)
+
         }
 
         catch (error) {
