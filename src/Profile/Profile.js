@@ -204,7 +204,7 @@ class Profile extends React.Component{
             createPortfolioName: null,
             // user is either the same user as mainUser or other one, if this is the case change information
             // buttons wont be displayed
-            user: parsedUser,
+            user: null,
             mainUser:parsedUser,
 
             username:null,
@@ -212,7 +212,8 @@ class Profile extends React.Component{
             pwd:     null,
             newPwd: null,
 
-            portfolioCode:null
+            portfolioCode:null,
+            validMail: false
         }
 
         this.handleButtonClick=this.handleButtonClick.bind(this);
@@ -224,7 +225,7 @@ class Profile extends React.Component{
 
     async componentWillMount(){
         const parsedUser = new User(JSON.parse(localStorage.getItem('user')))
-        this.setState({mainUser:parsedUser})
+        this.setState({user:parsedUser})
     }
 
     async logout(){
@@ -292,12 +293,13 @@ class Profile extends React.Component{
 
     async componentDidMount() {
         try {
+
             if (this.props.location.state !== undefined){
                 await this.setState({ user: this.props.location.state.user});
             }
             else{
                 const { id } = this.props.match.params;
-                if (id === undefined) {await this.setState({ user: this.state.mainUser });
+                if (id === undefined) {this.setState({ user: this.state.mainUser });
                     this.props.history.push({
                         pathname: `/profile/${this.state.mainUser.id}`,
                     });
@@ -377,7 +379,7 @@ class Profile extends React.Component{
 
             await api.post('/portfolios/',requestBody,{
                 headers: {
-                    token: this.state.user.token
+                    token: this.state.mainUser.token
                 }
             });
 
@@ -407,7 +409,7 @@ class Profile extends React.Component{
 
                             {/**ProfileInformation*/}
                             {!this.state.user ? <LoadingSpinner/> :
-                                <UserInfo user ={this.state.user} />}
+                                <UserInfo userId ={this.props.location.state ? this.props.location.state.user.id : this.props.match.params.id} />}
 
 
 
@@ -429,11 +431,12 @@ class Profile extends React.Component{
                                                 <br/>
                                                 <Label>New E-Mail:</Label>
                                                 <br/>
-                                                <CreatePortfolioInput onChange={e => {
+                                                <CreatePortfolioInput placeholder = 'example@example.example' onChange={e => {
                                                     this.handleInputChange('mail', e.target.value);
+                                                    this.emailVerify(e.target.value);
                                                 }} />
                                                 <br/>
-                                                <CreatePortfolioButton disabled={!this.state.mail} onClick={() => {this.updateData()
+                                                <CreatePortfolioButton disabled={!this.state.mail || !this.state.validMail} onClick={() => {this.updateData()
                                                     this.handleButtonClick('EmailTrigger',false)
                                                 }}>Change E-Mail</CreatePortfolioButton>
                                                 <br/>
@@ -632,6 +635,19 @@ class Profile extends React.Component{
 
     routePortfolio(id){
         this.props.history.push('/portfolio/' + id);
+    }
+
+    emailVerify( email ) {
+
+        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if ( re.test(email) ) {
+            this.setState({validMail:true})
+        }
+        else {
+            this.setState({validMail:false})
+        }
+
     }
 }
 

@@ -152,7 +152,7 @@ class Login extends React.Component{
                     }}/>
 
                     <StandardLabel>Email:</StandardLabel>
-                    <StandardInputField placeholder = 'Enter here...'               onChange={e => {
+                    <StandardInputField placeholder = 'example@example.example'               onChange={e => {
                         this.handleInputChange('mail', e.target.value);
                         this.emailVerify(e.target.value);
                     }}/>
@@ -206,3 +206,5 @@ class Login extends React.Component{
 }
 
 export default withRouter(Login);
+
+
