@@ -73,10 +73,17 @@ class Chat extends React.Component{
             message: '',
             messageList: []
         }
+
+        this.refreshChat=this.refreshChat.bind(this);
     }
 
     handleButtonClick(key, value) {
         this.setState({ [key]: value });
+    }
+
+    componentDidMount(){
+        console.log(this.props.portfolio.id)
+        setInterval(this.refreshChat, 1000);
     }
 
     async sendMessage(){
@@ -107,8 +114,6 @@ class Chat extends React.Component{
         });
 
         this.setState({'messageList':response.data.messageList})
-
-        console.log(this.state.messageList)
     }
 
     render(){

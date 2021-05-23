@@ -25,6 +25,7 @@ const InfoTag = styled.div`
 const MessageOverview = ({message}) => {
     return(
         <MessageContainer>
+            <InfoTag>{message.sentAt}</InfoTag>
             <InfoTag>{message.sender}</InfoTag>
             <InfoTag>: {message.content} </InfoTag>
         </MessageContainer>
