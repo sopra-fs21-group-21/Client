@@ -108,6 +108,11 @@ const PortfolioContainer = styled(ListElement)`
   margin-left: 5%;
   border-radius: 25px;
   width: 90%;
+  &:hover {
+    background-color: rgba(255,173,78,0.8);
+    box-shadow: 1px 1px 3px 2px rgba(255, 173, 0, 0.3);
+  }
+  cursor: pointer ;
 `
 
 const   DashBoardButton = styled(Button)`

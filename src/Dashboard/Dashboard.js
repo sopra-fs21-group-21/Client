@@ -18,6 +18,7 @@ import styled from "styled-components";
 import User from "../models/User";
 import {api} from "../helpers/api";
 import CLSpinner from "../Design/CLSpinner";
+import DisplayInfoPopup from "../Design/Wrappers/DisplayInfo";
 
 const DashboardBaseContainer = styled(BaseContainer)`
   min-width: 80vw;
@@ -75,6 +76,11 @@ const PortfolioContainer = styled(ListElement)`
     margin-left: 5%;
     border-radius: 25px;
     width: 90%;
+  &:hover {
+    background-color: rgba(255,173,78,0.8);
+    box-shadow: 1px 1px 3px 2px rgba(255, 173, 0, 0.3);
+  }
+  cursor: pointer ;
 `
 
 const DashBoardButton = styled(Button)`
@@ -159,7 +165,11 @@ class Dashboard extends React.Component{
             portfolioCode: null,
             createPortfolioName: null,
             portfolioVisibility: 'private',
-            allPublicPorts: null
+            allPublicPorts: null,
+            displayCreatePortInfo: false,
+            displayJoinPortInfo: false,
+            displayPortInfo:false
+
         }
 
         this.handleButtonClick=this.handleButtonClick.bind(this);
@@ -218,7 +228,9 @@ class Dashboard extends React.Component{
                                         return(
                                             <PortfolioContainer key={portfolio.id} onClick = {() => {
                                                 this.routePortfolio(portfolio.id)
-                                            }}>
+                                            }}
+                                            >
+
                                                 <PortfolioOverview portfolio={portfolio}/>
                                             </PortfolioContainer>
                                         );
@@ -229,10 +241,18 @@ class Dashboard extends React.Component{
                             {/*Create Portfolio Button and the Pop Up*/}
                             <DashBoardButton onClick = {() => {
                                 this.handleButtonClick('CreatePortTrigger',true)
-                                this.handleButtonClick('JoinPortTrigger',false)
-                            }}>
+                                this.handleButtonClick('JoinPortTrigger',false)}}
+
+                                 onMouseOver={() => {
+                                 this.handleButtonClick('displayCreatePortInfo',true)
+                                 }}
+                             onMouseLeave={() => {
+                                                 this.handleButtonClick('displayCreatePortInfo',false)
+                              }}
+                            >
                             Create Portfolio
                             </DashBoardButton>
+                            <DisplayInfoPopup text= {'Create a new portfolio with the desired name. You have to specify the visibility of your portfolio by clicking either on private or shared'} trigger={this.state.displayCreatePortInfo} setTrigger ={this.handleButtonClick}/>
 
                             <CreatePortfolioWrapper trigger={this.state.CreatePortTrigger} setTrigger ={this.handleButtonClick}>
                                 <br/>
@@ -263,9 +283,18 @@ class Dashboard extends React.Component{
                             <DashBoardButton onClick={() => {
                                 this.handleButtonClick('JoinPortTrigger',true)
                                 this.handleButtonClick('CreatePortTrigger',false)
-                            }}>
+                            }}
+
+                             onMouseOver={() => {
+                                 this.handleButtonClick('displayJoinPortInfo',true)
+                             }}
+                             onMouseLeave={() => {
+                                 this.handleButtonClick('displayJoinPortInfo',false)
+                             }}>
                             Join Existing Portfolio
                             </DashBoardButton>
+                            <DisplayInfoPopup text= {'You can join an existing portfolio and be a trader in that portfolio. Please enter the portfolio code in the inputfield and click on join portfolio'} trigger={this.state.displayJoinPortInfo}/>
+
 
                             <JoinPortfolioWrapper trigger = {this.state.JoinPortTrigger} setTrigger = {this.handleButtonClick}>
                                 <br/>
@@ -290,9 +319,12 @@ class Dashboard extends React.Component{
                         <LeaderboardLabel>Leaderboard</LeaderboardLabel>
 
                         <PortfolioFormContainer>
+                            {this.state.portfolios !== null && this.state.portfolios.length > 0 ?
                             <Label style={{color:'#D86969'}}>THIS LEADERBOARD CONTAINS ALL AVAILABLE PUBLIC PORTFOLIOS, SORTED BY WEEKLY PERFORMANCE: </Label>
+                                : <Label style={{color:'#D86969'}}>CREATE A PUBLIC PORTFOLIO TO DISPLAY IN THE LEADERBOARD</Label>}
 
-                            <PortfolioMediumContainer>
+
+                                <PortfolioMediumContainer>
                                 {!this.state.allPublicPorts ? <CLSpinner/> :
                                     <PortfolioListContainer>                                {
                                         this.state.allPublicPorts.map( portfolio => {

@@ -12,6 +12,7 @@ const PortfolioContainer = styled.div`
   flex-direction: row;
   border: none;
   outline: none;
+
 `
 
 const InfoTag = styled.div`

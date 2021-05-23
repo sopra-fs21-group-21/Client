@@ -12,6 +12,8 @@ import styled from "styled-components";
 import { api, handleError } from '../helpers/api';
 import User from "../models/User";
 import ForgotPwdWrapper from "../Design/Wrappers/ForgotPwdWrapper";
+import DisplayInfoPopup from "../Design/Wrappers/DisplayInfo";
+import DisplayInfoPopupWithSize from "../Design/Wrappers/DisplayInfoWithSize";
 
 
 const ForgotPassword = styled(Label)`
@@ -19,6 +21,8 @@ const ForgotPassword = styled(Label)`
   &:hover {
     transform: translateY(-1px);
     text-shadow: #E8E8E8 2px 2px 10px;
+    color: rgb(216, 105, 105);
+    cursor: pointer;
   }
 
   margin-left: 20%;
@@ -67,7 +71,8 @@ class Login extends React.Component{
             forgotPwdTrigger: false,
             mail:null,
             usernameF:null,
-            validMail:false
+            validMail:false,
+            displayFpwdInfo:false
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -144,12 +149,24 @@ class Login extends React.Component{
 
 
                 <ForgotPwdWrapper trigger={this.state.forgotPwdTrigger} setTrigger={this.handleInputChange}>
-                    <StandardBaseContainer style={{width:'100%'}}>
+                    <StandardBaseContainer style={{width:'100%'}}
+
+                    >
 
                     <StandardLabel>Username:</StandardLabel>
                     <StandardInputField placeholder = 'Enter here...'               onChange={e => {
                         this.handleInputChange('usernameF', e.target.value);
-                    }}/>
+                        this.handleInputChange('displayFpwdInfo', false);
+
+                    }}
+                                        onMouseOver={() => {
+                                            this.handleInputChange('displayFpwdInfo',true)
+                                        }}
+                                        onMouseLeave={() => {
+                                            this.handleInputChange('displayFpwdInfo',false)
+                                        }}
+
+                                        />
 
                     <StandardLabel>Email:</StandardLabel>
                     <StandardInputField placeholder = 'example@example.example'               onChange={e => {
@@ -160,7 +177,12 @@ class Login extends React.Component{
                         <StandardButton type="submit"
                                         disabled={!this.state.usernameF || !this.state.mail || !this.state.validMail}
                                         onClick={() => {this.sendMail();}}
+
                         >Submit</StandardButton>
+                        {!this.state.validMail || !this.state.usernameF || !this.state.mail ?
+                            <DisplayInfoPopupWithSize left={'0%'} top={'10%'} text={'Please enter your username and E-mail first to reset your password and then click on submit. ' +
+                            'An email with further information will be sent to you. '} trigger={this.state.displayFpwdInfo}/>:
+                            ""}
                     </StandardBaseContainer>
                 </ForgotPwdWrapper>
 

@@ -40,6 +40,8 @@ const MidFormContainer = styled(FormContainer)`
   margin-top: 3%;
   flex-direction: column;
   align-content: flex-start;
+  overflow-y: scroll;
+
 `
 const PortfolioFormContainer = styled(FormContainer)`
   width: 85%;
@@ -154,6 +156,11 @@ const TraderListElement = styled(ListElement)`
   margin-left: 5%;
   border-radius: 25px;
   width: 90%;
+  &:hover {
+    background-color: rgba(255,173,78,0.8);
+    box-shadow: 1px 1px 3px 2px rgba(255, 173, 0, 0.3);
+  }
+  cursor: pointer ;
 `
 
 const PositionListElement = styled(ListElement)`
