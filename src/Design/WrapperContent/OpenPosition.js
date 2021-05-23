@@ -178,8 +178,8 @@ class OpenPosition extends React.Component{
         this.state = {
             stockName: 'Stock Info',
             dailyChange: '',
-            weeklyChange: '',
-            yearToDate: '',
+            lastDayClose: '',
+            volume: '',
             priceAsOf: '',
             pricePerShare: 0,
             shareAmount: 0,
@@ -223,13 +223,10 @@ class OpenPosition extends React.Component{
                             Daily Change: {this.state.dailyChange}
                         </StockInfoLabel>
                         <StockInfoLabel>
-                            Weekly Change: {this.state.weeklyChange}
+                            Price at last close: {this.state.lastDayClose}
                         </StockInfoLabel>
                         <StockInfoLabel>
-                            Year-To-Date: {this.state.yearToDate}
-                        </StockInfoLabel>
-                        <StockInfoLabel>
-                            Price as of today: {this.state.priceAsOf}
+                            Volume: {this.state.volume}
                         </StockInfoLabel>
                     </StockInfoMidContainer>
                 </StockInfoBaseContainer>
@@ -295,7 +292,7 @@ class OpenPosition extends React.Component{
 
     async search(){
         const tempUser = new User(JSON.parse(localStorage.getItem('user')));
-        const requestUrl = 'positions/' + this.state.stockSearch;
+        const requestUrl = 'positions/' + this.state.stockSearch + '/more';
 
         const response = await api.get(requestUrl, {
             headers: {
@@ -305,7 +302,10 @@ class OpenPosition extends React.Component{
 
         console.log(response.data);
 
-        this.setState({'pricePerShare': response.data});
+        this.setState({'pricePerShare': response.data.currentPrice});
+        this.setState({'dailyChange': response.data.changeFromLastClose});
+        this.setState({'lastDayClose': response.data.lastDayClose});
+        this.setState({'volume': response.data.lastDayVolume});
     }
 }
 

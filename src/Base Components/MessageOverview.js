@@ -25,8 +25,8 @@ const InfoTag = styled.div`
 const MessageOverview = ({message}) => {
     return(
         <MessageContainer>
-            <InfoTag>Sender: {message.sender} </InfoTag>
-            <InfoTag>Content: {message.content} </InfoTag>
+            <InfoTag>{message.sender}</InfoTag>
+            <InfoTag>: {message.content} </InfoTag>
         </MessageContainer>
     );
 };

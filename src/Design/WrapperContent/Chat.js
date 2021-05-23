@@ -55,6 +55,7 @@ const Messages = styled.div`
   height: 90%;
   background-color: white;
   border-radius: 25px;
+  overflow-y: scroll;
 `
 
 const MessageContainer = styled(ListContainer)`
