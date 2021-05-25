@@ -83,8 +83,8 @@ would be nice to include markets from the rest of the world (though data is scar
 
 ## Authors
 
-* Alessandro Vanzo - [GitHub](http://github.com/alessandrovanzo)
-* Karim Khamaisi   - [GitHub](http://github.com/Karimkh31)
+* Alessandro Vanzo - [@Alessandro](http://github.com/alessandrovanzo)
+* Karim Khamaisi   - [@Karim](http://github.com/Karimkh31)
 
 
 ## License
