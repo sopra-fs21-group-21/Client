@@ -58,6 +58,7 @@ const StandardButton = styled(Button)`
   height: 30px;
   margin-left: 20%;
   margin-top: 20px;
+  cursor: pointer;
 `
 
 class Login extends React.Component{

@@ -18,6 +18,7 @@ const PopUpBaseContainer = styled.div`
   padding: 1%;
   right: 34%;
   top: 18%;
+  box-shadow: 0 0 8px 0;
 `
 const XWrapper = styled.div`
   top: 2vh;

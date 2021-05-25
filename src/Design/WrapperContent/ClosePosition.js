@@ -53,8 +53,13 @@ const ButtonContainer = styled.div`
 `
 
 const ClosePositionButton = styled(Button)`
-    padding: 1%;
-    width: 50%;
+  padding: 1%;
+  width: 50%;
+
+  &:hover {
+    cursor: pointer;
+    box-shadow: 1px 1px 3px 2px rgb(255, 173, 0);
+  }
 `
 
 const ClosePositionBaseContainer = styled.div`

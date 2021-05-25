@@ -26,6 +26,7 @@ import User from "../models/User";
 import UserInfo from "./UserInfo";
 import { api, handleError } from '../helpers/api';
 import {Container} from "react-bootstrap";
+import {Label700} from "../Design/Label500";
 
 
 
@@ -120,6 +121,7 @@ const   DashBoardButton = styled(Button)`
   margin-bottom: 4%;
   height: 3.7vh;
   padding: 5px;
+  cursor: pointer;
 `
 
 const MenuButton = styled(Button)`
@@ -180,6 +182,9 @@ const CreatePortfolioButton = styled(Button)`
   &:focus {
     background-color: rgba(255,173,78,0.8);
     box-shadow: 1px 1px 3px 2px rgba(255, 173, 0, 0.3);
+  }
+  &:hover {
+  cursor: pointer;
   }
 `
 
@@ -428,7 +433,8 @@ class Profile extends React.Component{
                                                 this.handleButtonClick('PasswordTrigger',false)
                                                 this.handleButtonClick('UsernameTrigger',false)
                                                 this.handleButtonClick('EmailTrigger',true)                                }}>
-                                                Change Email
+                                                <Label700>Change Email</Label700>
+
                                             </ProfileChangeButton>
 
                                             {/**Change email popup**/}
@@ -452,7 +458,8 @@ class Profile extends React.Component{
                                                 this.handleButtonClick('PasswordTrigger',false)
                                                 this.handleButtonClick('UsernameTrigger',true)
                                                 this.handleButtonClick('EmailTrigger',false)                                }}>
-                                                Change Username
+                                                <Label700>Change Username</Label700>
+
                                             </ProfileChangeButton>
 
                                             {/**Change username popup**/}
@@ -466,7 +473,8 @@ class Profile extends React.Component{
                                                 <br/>
                                                 <CreatePortfolioButton disabled={!this.state.username} onClick={() => {this.updateData();
                                                     this.handleButtonClick('UsernameTrigger',false)
-                                                }}>Change Username</CreatePortfolioButton>
+                                                }}>                                     {!this.state.username?<p style={{  fontSize: '16px'}}>Change Username</p> : <Label700>Change Username</Label700>}
+                                                </CreatePortfolioButton>
                                                 <br/>
                                             </ChangeUsernameWrapper>
 
@@ -477,7 +485,7 @@ class Profile extends React.Component{
                                                 this.handleButtonClick('EmailTrigger',false)
 
                                             }}>
-                                                Change Password
+                                                <Label700>Change Password</Label700>
                                             </ProfileChangeButton>
                                             {/**Change Password popup**/}
 
@@ -545,43 +553,45 @@ class Profile extends React.Component{
                             {/**Create Portfolio Button and the Pop Up*/}
                             {/**Join Portfolio Button and the Pop Up, display iff current displayed user in the logged in user*/}
 
-
                                     {this.state.mainUser.token === this.state.user.token ?
                                             <DashBoardButton onClick={() => {
                                                 this.handleButtonClick('JoinPortTrigger',false)
                                                 this.handleButtonClick('CreatePortTrigger',true)                            }}>
-                                                Create Portfolio
+                                                <Label700>Create Portfolio</Label700>
                                             </DashBoardButton>:""}
                                     {this.state.mainUser.token === this.state.user.token  ?
                                             <DashBoardButton onClick={() => {
                                                 this.handleButtonClick('JoinPortTrigger',true)
                                                 this.handleButtonClick('CreatePortTrigger',false)                            }}>
-                                                Join Existing Portfolio
+                                                <Label700>Join Existing Portfolio</Label700>
                                             </DashBoardButton>:""}
 
 
                             {/**Create and Join Port Wrappers**/}
                             <CreatePortfolioWrapper trigger={this.state.CreatePortTrigger} setTrigger={this.handleButtonClick}>
                                 <br/>
-                                <Label>Portfolio Name:</Label>
+                                <Label700>Portfolio Name:</Label700>
                                 <br/>
                                 <CreatePortfolioInput onChange={e => {
                                     this.handleButtonClick('createPortfolioName',e.target.value)
                                 }}/>
                                 <br/>
                                 <CreatePortfolioMidContainer>
+
                                     <CreatePortfolioButton onClick={() => {
                                         this.handleButtonClick('portfolioVisibility','PRIVATE')
-                                    }}>Private</CreatePortfolioButton>
+                                    }} disabled={true} style={{cursor:'no-drop'
+                                    }}>
+                                        Private</CreatePortfolioButton>
 
                                     <CreatePortfolioButton onClick={() => {
                                         this.handleButtonClick('portfolioVisibility','SHARED')
-                                    }}>Shared</CreatePortfolioButton>
+                                    }}><Label700>Shared</Label700></CreatePortfolioButton>
                                 </CreatePortfolioMidContainer>
                                 <br/>
                                 <CreatePortfolioButton onClick ={()=>{
                                     this.createPortfolio()
-                                }}>+Create Portfolio</CreatePortfolioButton>
+                                }}><Label700>+Create Portfolio</Label700></CreatePortfolioButton>
                                 <br/>
                             </CreatePortfolioWrapper>
 
@@ -596,7 +606,7 @@ class Profile extends React.Component{
                                 <CreatePortfolioButton onClick={() => {
                                     this.joinPortfolio()
 
-                                }} disabled ={!this.state.portfolioCode}>Join Portfolio</CreatePortfolioButton>
+                                }} disabled ={!this.state.portfolioCode}> {!this.state.portfolioCode ? <p style={{  fontSize: '16px'}}>Join Portfolio</p>:<Label700>Join Portfolio</Label700>}</CreatePortfolioButton>
                                 <br/>
                             </JoinPortfolioWrapper>
 

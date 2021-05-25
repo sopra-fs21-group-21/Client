@@ -6,6 +6,7 @@ import {Button} from "../Button";
 import { withRouter } from 'react-router-dom';
 import User from "../../models/User";
 import {api} from "../../helpers/api";
+import PointsLoadingSpinner from "../PointsLoadingSpinner";
 
 const BaseContainer = styled.div`
     width:100%;
@@ -24,6 +25,7 @@ const StockCodeContainer = styled.div`
     align-items: center;
     margin-top: 3%;
 `
+
 
 const CodeSearchContainer = styled.div`
     width: 100%;
@@ -88,7 +90,7 @@ const StockInfoNameLabel = styled(Label)`
 `
 
 const StockInfoLabel = styled(Label)`
-    font-size: 12px;
+    font-size: 14px;
     margin-left: 10%;
     text-transform: none;
     margin-bottom: 1%;
@@ -131,7 +133,7 @@ const GeneralInformationContainer = styled.div`
 `
 
 const GeneralInformationLabel = styled(Label)`
-    font-size: 12px;
+    font-size: 14px;
     margin-left: 10%;
     text-transform: none;
 `
@@ -183,8 +185,11 @@ class OpenPosition extends React.Component{
             priceAsOf: '',
             pricePerShare: 0,
             shareAmount: 0,
-            stockSearch: '',
-            stockType: null
+            stockSearch: null,
+            stockType: 'STOCK_LONG',
+            // to keep track of the stockInfo
+            gotShare: false,
+            isLoading:false
         }
     }
 
@@ -196,9 +201,13 @@ class OpenPosition extends React.Component{
         return(
             <BaseContainer>
 
-                <StockCodeContainer>
+                {!this.state.gotShare ? <StockCodeContainer style={{marginTop:'20vh'}}>
+                        <StockCodeLabel>Stock Code</StockCodeLabel>
+                    </StockCodeContainer> :
+
+                    <StockCodeContainer>
                     <StockCodeLabel>Stock Code</StockCodeLabel>
-                </StockCodeContainer>
+                </StockCodeContainer>}
 
                 <CodeSearchContainer>
                     <CodeSearchInput onChange={e => {
@@ -209,9 +218,10 @@ class OpenPosition extends React.Component{
                 <SearchButtonContainer>
                     <SearchButton onClick={()=>{
                         this.search()
-                    }}>Search</SearchButton>
+                    }} disabled={!this.state.stockSearch}>{this.state.isLoading ? <PointsLoadingSpinner/>:<div>Search</div>}</SearchButton>
                 </SearchButtonContainer>
 
+                {!this.state.gotShare ? "" :
                 <StockInfoBaseContainer>
                     <StockInfoMidContainer>
                         <StockInfoNameLabelContainer>
@@ -220,7 +230,7 @@ class OpenPosition extends React.Component{
                             </StockInfoNameLabel>
                         </StockInfoNameLabelContainer>
                         <StockInfoLabel>
-                            Daily Change: {this.state.dailyChange}
+                            Daily Change: {this.state.dailyChange>0 ? <p style={{color:'green' ,display:"inline"}}>{this.state.dailyChange}</p>:<p style={{color:'red',display:"inline"}}>{this.state.dailyChange}</p>}
                         </StockInfoLabel>
                         <StockInfoLabel>
                             Price at last close: {this.state.lastDayClose}
@@ -229,40 +239,45 @@ class OpenPosition extends React.Component{
                             Volume: {this.state.volume}
                         </StockInfoLabel>
                     </StockInfoMidContainer>
-                </StockInfoBaseContainer>
+                </StockInfoBaseContainer>}
 
-                <SharesLabelContainer>
+                {!this.state.gotShare ? "" :
+                    <SharesLabelContainer>
                     <SharesLabel>How Many Shares:</SharesLabel>
-                </SharesLabelContainer>
+                </SharesLabelContainer>}
 
-                <SharesInputFieldContainer>
+                {!this.state.gotShare ? "" :
+                    <SharesInputFieldContainer>
                     <SharesInputField onChange={e => {
                         this.handleButtonClick('shareAmount', e.target.value);
                     }}/>
-                </SharesInputFieldContainer>
+                </SharesInputFieldContainer>}
 
-                <GeneralInformationContainer>
-                    <GeneralInformationLabel>Portfolio Balance: {this.props.portfolio.balance}</GeneralInformationLabel>
-                    <GeneralInformationLabel>Price per Share: {this.state.pricePerShare} CHF</GeneralInformationLabel>
-                    <GeneralInformationLabel>Total Price: {this.state.pricePerShare * this.state.shareAmount}</GeneralInformationLabel>
-                </GeneralInformationContainer>
+                {!this.state.gotShare ? "" :
+                    <GeneralInformationContainer>
+                    <GeneralInformationLabel>Portfolio Balance: {this.props.portfolio.balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} CHF</GeneralInformationLabel>
+                    <GeneralInformationLabel>Price per Share: {this.state.pricePerShare.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} CHF</GeneralInformationLabel>
+                    <GeneralInformationLabel>Total Price: {(this.state.pricePerShare * this.state.shareAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} CHF</GeneralInformationLabel>
+                </GeneralInformationContainer>}
 
-                <LongShortButtonContainer>
+                {!this.state.gotShare ? "" :
+                    <LongShortButtonContainer>
                     <LongShortButton onClick={()=>{
                       this.handleButtonClick('stockType','STOCK_LONG')
                     }}>Long</LongShortButton>
 
                     <LongShortButton onClick={()=>{
                         this.handleButtonClick('stockType','STOCK_SHORT')
-                    }}>Short</LongShortButton>
-                </LongShortButtonContainer>
+                    }} disabled={true} style={{cursor:'no-drop'}}>Short</LongShortButton>
+                </LongShortButtonContainer>}
 
-                <OpenButtonContainer>
+                {!this.state.gotShare ? "" :
+                    <OpenButtonContainer>
                     <OpenButton onClick = {()=>{
                         this.openPosition()
                         this.props.setTrigger('OpenPositionTrigger',false)
-                    }}>Open</OpenButton>
-                </OpenButtonContainer>
+                    }} disabled={!this.state.stockSearch || !(this.state.shareAmount > 0)}>Open</OpenButton>
+                </OpenButtonContainer>}
 
             </BaseContainer>
         );
@@ -294,14 +309,16 @@ class OpenPosition extends React.Component{
         const tempUser = new User(JSON.parse(localStorage.getItem('user')));
         const requestUrl = 'positions/' + this.state.stockSearch + '/more';
 
+        this.setState({'isLoading':true})
         const response = await api.get(requestUrl, {
             headers: {
                 token: tempUser.token
             }
         });
+        this.setState({'isLoading':false})
 
         console.log(response.data);
-
+        this.setState({'gotShare' :true});
         this.setState({'pricePerShare': response.data.currentPrice});
         this.setState({'dailyChange': response.data.changeFromLastClose});
         this.setState({'lastDayClose': response.data.lastDayClose});

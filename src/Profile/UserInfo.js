@@ -24,6 +24,8 @@ const UserInfoLabel = styled(Label)`
     width: 100%;
     min-height: 4vh;
     margin: 5px;
+  font-weight: 500;
+  font-size: 18px;
 `
 
 
@@ -55,7 +57,7 @@ class UserInfo extends React.Component{
         return(
             <ProfileFormContainer>
                 <UserInfoLabel>Status: { this.state.user === null ? "" :this.state.user.status}
-                    { this.state.user === null ? "" : this.state.user.status ==='ONLINE' ?  <GreenBall/> : <RedBall/>} </UserInfoLabel>
+                    { this.state.user === null ? "" : this.state.user.status ==='ONLINE' ?  <GreenBall /> : <RedBall/>} </UserInfoLabel>
                 <UserInfoLabel>Username: {this.state.user === null ? "" :this.state.user.username }</UserInfoLabel>
                 <UserInfoLabel>E-Mail: {  this.state.user === null ? "" :this.state.user.mail}</UserInfoLabel>
                 <UserInfoLabel>Joined: {  this.state.user === null ? "" :this.state.user.creationDate.toString().slice(0, 10)}</UserInfoLabel>            </ProfileFormContainer>

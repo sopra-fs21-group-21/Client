@@ -50,6 +50,7 @@ const PortfolioFormContainer = styled(FormContainer)`
   margin-left: 5%;
   margin-right: 10%;
   margin-top: 3%;
+  flex-direction: column;
 `
 
 const OverViewContainer = styled.div`
@@ -169,7 +170,11 @@ const PositionListElement = styled(ListElement)`
   margin-bottom: 2vh;
   border-radius: 25px;
   width: 100%;
-  margin-left: -2.5%;
+  &:hover {
+    background-color: rgba(255,173,78,0.8);
+    box-shadow: 1px 1px 3px 2px rgba(255, 173, 0, 0.3);
+  }
+
 `
 
 const PositionLabelContainer = styled.div`
@@ -181,27 +186,30 @@ const PositionLabelContainer = styled.div`
 `
 
 const TraderMidFormContainer = styled(FormContainer)`
-  width: 85%;
-  height: 80%;
+  width: 95%;
+  height: 100%;
   border-radius: 25px;
   margin-left: 10%;
   margin-right: 5%;
   margin-top: 3%;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: center;
+  overflow-y: scroll;
 `
 
 const PositionLabel = styled(Label)`
 `
 
 const OpenPositionContainer = styled.div`
-    height: 60%;
+    height: 15%;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
+    margin-bottom: 5vh;
+
 `
 
 const OpenPositionButton = styled(Button)`
@@ -212,6 +220,9 @@ const OpenPositionButton = styled(Button)`
       background-color: rgba(255,173,78,0.8);
       box-shadow: 1px 1px 3px 2px rgba(255, 173, 0, 0.3);
     }
+  
+    cursor: pointer;
+  
 `
 
 const ChatButtonWrapper = styled.div`
@@ -315,9 +326,10 @@ class Dashboard extends React.Component{
 
                         {/*Labels*/}
                         <BalanceLabelContainer>
-                            {this.state.portfolio.balance != undefined ?
+                            {this.state.portfolio.balance !== undefined ?
                             <BalanceLabel>current balance: {this.state.portfolio.balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} CHF</BalanceLabel>:""}
-                        </BalanceLabelContainer>
+                            {this.state.portfolio.totValue !== undefined ?
+                                <BalanceLabel>current total value: {this.state.portfolio.totValue.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} CHF</BalanceLabel>:""}                        </BalanceLabelContainer>
 
                         <PositionLabelContainer>
                             <PositionLabel>Open Positions</PositionLabel>
@@ -336,22 +348,24 @@ class Dashboard extends React.Component{
                                     })}
                                 </TraderListContainer>
 
-                                <OpenPositionContainer>
-                                    <OpenPositionButton
+                            </TraderMidFormContainer>
+                            <OpenPositionContainer>
+                                {!this.state.allowChanges ?<OpenPositionButton disabled={true} style={{cursor:'no-drop'}}>Open Position</OpenPositionButton>:
+                                <OpenPositionButton
+
                                     onClick = {() => {this.handleButtonClick('OpenPositionTrigger',true);
                                     }}
                                     disabled = {!this.state.allowChanges}
-                                    >Open Position</OpenPositionButton>
-                                </OpenPositionContainer>
+                                >Open Position</OpenPositionButton>}
+                            </OpenPositionContainer>
 
-                                <OpenPositionWrapper trigger={this.state.OpenPositionTrigger} setTrigger={this.handleButtonClick}>
-                                    <OpenPosition portfolio = {this.state.portfolio} setTrigger = {this.handleButtonClick} reloadPortfolio={this.getPortfolio}/>
-                                </OpenPositionWrapper>
+                            <OpenPositionWrapper trigger={this.state.OpenPositionTrigger} setTrigger={this.handleButtonClick}>
+                                <OpenPosition portfolio = {this.state.portfolio} setTrigger = {this.handleButtonClick} reloadPortfolio={this.getPortfolio}/>
+                            </OpenPositionWrapper>
 
-                                <ClosePositionWrapper trigger={this.state.ClosePositionTrigger} setTrigger={this.handleButtonClick}>
-                                    <ClosePosition positionId = {this.state.closePositionId} portfolioId = {this.state.portfolio.id} setTrigger={this.handleButtonClick} reloadPortfolio={this.getPortfolio}/>
-                                </ClosePositionWrapper>
-                            </TraderMidFormContainer>
+                            <ClosePositionWrapper trigger={this.state.ClosePositionTrigger} setTrigger={this.handleButtonClick}>
+                                <ClosePosition positionId = {this.state.closePositionId} portfolioId = {this.state.portfolio.id} setTrigger={this.handleButtonClick} reloadPortfolio={this.getPortfolio}/>
+                            </ClosePositionWrapper>
                         </PortfolioFormContainer>
                     </OverViewContainer>
                 </DashboardBaseContainer>
@@ -423,6 +437,7 @@ class Dashboard extends React.Component{
         const portfolioInfo = {
             'id': response.data.id,
             'balance': response.data.balance,
+            'totValue': response.data.totValue,
             'name': response.data.name,
             'performance': response.data.weeklyPerformance,
             'visibility': response.data.portfolioVisibility,

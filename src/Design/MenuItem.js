@@ -16,7 +16,7 @@ const BlackBar = styled.rect`
 
 class MenuItem extends React.Component {
     render() {
-        return (<div>
+        return (<div style={{cursor:'pointer'}}>
                     <MenuBox>
                         <BlackBar/>
                         <BlackBar y = "15"/>
