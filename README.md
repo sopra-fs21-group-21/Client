@@ -1,70 +1,110 @@
-# Getting Started with Create React App
+# Project C.R.E.A.M. - SoPra Group 21
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Introduction
 
-## Available Scripts
+### Aim of the platform
+Our platform allows users to simulate trading stocks, opening long and short positions, using real time financial data.
+Each user can create several portfolios, each with a starting balance of 100,000 CHF, and trade stocks in the main
+US markets, the Frankfurt market and the Swiss Exchange. Price, as well as the currency exchange rate, are fetched in
+real time.
 
-In the project directory, you can run:
+### Additional features
 
-### `npm start`
+#### Real-time collaboration
+You can collaborate with other users by letting them join one of your portfolios via the join code.
+Each portfolio also has a dedicated trader's chat.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+#### Leaderboard
+The leaderboard will show the top-performing portfolios, you will be able to examine them in detail by clicking on them.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+#### User profiles
+By clicking on a username in the portfolio page, you will be redirected to a user's profile page, where you can see
+the user's information as well as the portfolios they are trading in.
 
-### `npm test`
+## Technologies
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+We are using Java for the backend and JavaScript and React for the frontend.
+The main other frameworks we are using are Spring, Rest, Javamail (for password recovery),
+Heroku PostGREs (persistent storage).
+The financial data is provided by AlphaVantage, who kindly gave us a free license for this project.
 
-### `npm run build`
+## High level components (backend)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Financial
+There are three main components dealing with the financial logic of the application. The [FinanceService class](https://github.com/sopra-fs21-group-21/Server/blob/master/src/main/java/ch/uzh/ifi/hase/soprafs21/service/FinanceService.java)
+fetches data from AlphaVantage upon request from other parts of the program.
+The [PositionService class](https://github.com/sopra-fs21-group-21/Server/blob/master/src/main/java/ch/uzh/ifi/hase/soprafs21/service/PositionService.java)
+deals with all open positions (long and short on a stock), it is responsible for updating the prices, which it does by
+updating a position per second constantly and other position-related tasks.
+The [PortfolioService class] is responsible for handling anything portfolio related. Opening and closing a position,
+adding and subtracting cash, computing the total value of a portfolio. Note that this class does not directly access
+financial data or update positions, as that is delegated to the position class, which felt like better encapsulation.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### User & chat
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Launch and deployment
 
-### `npm run eject`
+The project has continuous deployment, meaning that as soon as a commit is pushed to the main branch, the tests are
+executed, and if all tests pass, the project is then deployed to Heroku (host) and to SonarCloud (for code analysis).
+Therefore, just push, everything else will follow.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+One caution note goes to the database structure. Because we use persistent storage, one should be careful not to break
+the database logic when updating the code.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+If you run the application locally the port is localhost:8080.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Flow (illustration)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Log in into the application. You will see your portfolios and buttons to create or join new ones on the left, and the leaderboard
+on the right. If you want to access your profile and update information, the top-right menu is what you are looking for.
 
-## Learn More
+If you click on a portfolio, you will see it's portfolio page. If you are a trader, you can open positions and chat.
+if not, just enjoy the view.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Roadmap
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Some features that would make nice additions.
 
-### Code Splitting
+### Charts
+Yes, we know. You say "finance" and people think charts. Our application does not have charts, but they would fit well.
+You might add charts that show variations of a portfolio value, capital and cash across time.
+Note that charts for a stock price history would be hard to include, as AlphaVantage does not provide historical data
+for all stocks.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Currency trading
+Why not also trade currencies, both standard and crypto? We have the data, and the backend is readily extensible, as we
+foresaw this possibility.
 
-### Analyzing the Bundle Size
+### Other markets
+In a globalized world, most things finance still seem to focus on the United States (even here in Europe). Most of the data, historical and realtime,
+is on US stocks. Most educational content and research is US-centered. We wanted to give our application a distinctly European touch,
+which is why we are supporting two european (europe != EU) exchanges and using swiss francs as the main currency. It
+would be nice to include markets from the rest of the world (though data is scarce and expensive).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Authors
 
-### Making a Progressive Web App
+Alessandro Vanzo - github.com/alessandrovanzo
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## License
 
-### Advanced Configuration
+MIT License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Copyright (c) [2021] [Alessandro Vanzo]
 
-### Deployment
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
