@@ -32,10 +32,12 @@ The financial data is provided by AlphaVantage, who kindly gave us a free licens
 
 There are four main components 
 
-1. The [Dashboard](https://github.com/sopra-fs21-group-21/Client/blob/master/src/Dashboard/Dashboard.js) class, where users can inspect and use two of our main functionalities. First on the Dashboard page, users can view their own portfolios also they can join an existing portfolio or create new one. Second users can view all available public portfolios in the system sorted by balance. 
-From both views users can click on any portfolio and be redirected to the specific portfolio page. 
+1. The [Dashboard](https://github.com/sopra-fs21-group-21/Client/blob/master/src/Dashboard/Dashboard.js) class, where users can inspect and use two of our main functionalities. First on the Dashboard page, users can view their own portfolios aw well as joining an existing portfolio or createing a new one. Second users can view all available public portfolios in the system sorted by balance. From both views users can click on any portfolio and be redirected to the specific portfolio page. 
+
 1. The [Portfolio](https://github.com/sopra-fs21-group-21/Client/blob/master/src/Portfolio/Portfolio.js) class, where users can inspect the viewd portfolio. A portfolio can be accessed either by id using it URL or by clicking on some portfolio i.e from the LeaderBoard container. If users are a part of the traders in that portfolio they can also trade in it i.e by opening positions or closing positions. Otherwise users can only view main information about that portfolio. 
-1. The [Profile](https://github.com/sopra-fs21-group-21/Client/blob/master/src/Profile/Profile.js) class, where key information about a specific user are displayed. If the user is inspecting his/her own portfolio, its possible to join or create a portfolio from the profile page, since users can view all their portfolio beside to their information, such as E-Mail, Username, creation date and online status. Additionally users can from the profile page change their E-Mail, username and password.  
+
+1. The [Profile](https://github.com/sopra-fs21-group-21/Client/blob/master/src/Profile/Profile.js) class, where key information about a specific user are displayed. If the user is inspecting his/her own profile, its possible to join or create a portfolio from the profile page, since users can view all their portfolio beside to their information, such as E-Mail, Username, creation date and online status. Additionally users can from the profile page change their E-Mail, username and password.  
+
 1. The [Chat](https://github.com/sopra-fs21-group-21/Client/blob/master/src/Design/WrapperContent/Chat.js) class, where users can chat with each other within a portfolio, this means that traders in the same portfolio are able to chat with each other but not in others portfolio. 
 
 
