@@ -44,6 +44,15 @@ class ChatPopUpWrapper extends React.Component{
 
     constructor(props){
         super(props);
+        this.stopInterval = this.stopInterval.bind(this)
+
+    }
+
+    stopInterval(){
+        const myInterval = localStorage.getItem('myInterval')
+        console.log(myInterval)
+        if (myInterval)
+        clearInterval(parseInt(localStorage.getItem('myInterval')));
     }
 
     render() {
@@ -51,7 +60,9 @@ class ChatPopUpWrapper extends React.Component{
             this.props.trigger ? (
                 <Popup> <PopUpBaseContainer>
                     <XWrapper onClick={() =>
-                        this.props.setTrigger("ChatTrigger",false)
+                    {this.props.setTrigger("ChatTrigger",false)
+                        clearInterval(parseInt(localStorage.getItem('myInterval')))}
+
                     }>
                         <XSvg/>
                     </XWrapper>
@@ -59,7 +70,7 @@ class ChatPopUpWrapper extends React.Component{
                         {this.props.children}
                     </SecondaryContainer>
                 </PopUpBaseContainer></Popup>
-            ) : ""
+            ) : ''
         );
     }
 }

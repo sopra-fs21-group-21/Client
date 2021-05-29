@@ -269,7 +269,7 @@ class Dashboard extends React.Component{
         let testId = this.props.match.params.id;
         await this.getPortfolio(testId);
 
-        await this.setPermissions(testId)
+        await  this.setPermissions(testId)
     }
 
     render(){

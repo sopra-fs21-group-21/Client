@@ -8,6 +8,7 @@ import ListContainer from "../ListContainer";
 import ListElement from "../ListElement";
 import User from "../../models/User";
 import MessageOverview from "../../Base Components/MessageOverview";
+import FormContainer from "../FormContainer";
 
 const ChatBaseContainer = styled.div`
   width: 100%;
@@ -34,19 +35,19 @@ const MessageSendContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding: 5%;
 `
 
 const MessageInputField = styled(InputField)`
-  width: 60%;
-  height: 40%;
-  margin: 5%;
+  width:100%;
+  height: 70%;
 `
 
+
+
 const MessageSendButton = styled(Button)`
-  width: 20%;
+  width: 30%;
   height: 40%;
-  margin: 5%;
+  margin-top: 2%;
 `
 
 const Messages = styled.div`
@@ -59,6 +60,7 @@ const Messages = styled.div`
 `
 
 const MessageContainer = styled(ListContainer)`
+    
 `
 
 const Message = styled(ListElement)`
@@ -73,9 +75,11 @@ class Chat extends React.Component{
             message: '',
             messageList: []
         }
-
+        this.handleSubmit=this.handleSubmit.bind(this);
         this.refreshChat=this.refreshChat.bind(this);
     }
+
+
 
     handleButtonClick(key, value) {
         this.setState({ [key]: value });
@@ -83,8 +87,10 @@ class Chat extends React.Component{
 
     componentDidMount(){
         console.log(this.props.portfolio.id)
-        setInterval(this.refreshChat, 1000);
+        const myInterval = setInterval(this.refreshChat, 1000);
     }
+
+
 
     async sendMessage(){
 
@@ -116,6 +122,13 @@ class Chat extends React.Component{
         this.setState({'messageList':response.data.messageList})
     }
 
+
+    handleSubmit(e){
+        e.preventDefault();
+        e.target.reset();
+    }
+
+
     render(){
         return(
             <ChatBaseContainer>
@@ -124,7 +137,7 @@ class Chat extends React.Component{
                         <MessageContainer>
                             {this.state.messageList.map( message => {
                                 return(
-                                    <Message key={message.id}>
+                                    <Message className='msg' key={message.id}>
                                         <MessageOverview message={message}/>
                                     </Message>
                                 );
@@ -132,13 +145,17 @@ class Chat extends React.Component{
                         </MessageContainer>
                     </Messages>
                 </ChatDisplayContainer>
-                <MessageSendContainer>
+                <MessageSendContainer  >
+                    <form style ={{  width: '60%',  height: '40%'
+
+
+                    }} onSubmit={this.handleSubmit} ref="form">
                     <MessageInputField onChange={e => {
                         this.handleButtonClick('message', e.target.value)
                     }}/>
-                    <MessageSendButton onClick = {()=> {
+                    <MessageSendButton type="submit"  onClick = {()=> {
                         this.sendMessage()
-                    }}>Send</MessageSendButton>
+                    }}>Send</MessageSendButton></form>
                 </MessageSendContainer>
             </ChatBaseContainer>
         );
