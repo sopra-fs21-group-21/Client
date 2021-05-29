@@ -186,11 +186,19 @@ class OpenPosition extends React.Component{
             pricePerShare: 0,
             shareAmount: 0,
             stockSearch: null,
-            stockType: 'STOCK_LONG',
+            stockType: null,
             // to keep track of the stockInfo
             gotShare: false,
-            isLoading:false
+            isLoading:false,
+            shortClicked:false,
+            longClicked:false,
+            totalPrice: 0
         }
+    }
+
+    componentDidMount() {
+        this.setState({'totalPrice': (this.state.pricePerShare * this.state.shareAmount)})
+
     }
 
     handleButtonClick(key, value) {
@@ -257,18 +265,26 @@ class OpenPosition extends React.Component{
                     <GeneralInformationContainer>
                     <GeneralInformationLabel>Portfolio Balance: {this.props.portfolio.balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} CHF</GeneralInformationLabel>
                     <GeneralInformationLabel>Price per Share: {this.state.pricePerShare.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} CHF</GeneralInformationLabel>
-                    <GeneralInformationLabel>Total Price: {(this.state.pricePerShare * this.state.shareAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} CHF</GeneralInformationLabel>
+                    <GeneralInformationLabel>Total Price:
+                        {(this.state.pricePerShare* this.state.shareAmount > this.props.portfolio.balance ) ? <p style={{color:'red' ,display:"inline"}}>{(this.state.pricePerShare* this.state.shareAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} CHF</p>:
+                            <p style={{display:"inline"}}> {(this.state.pricePerShare* this.state.shareAmount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} CHF</p>}
+                       </GeneralInformationLabel>
                 </GeneralInformationContainer>}
 
                 {!this.state.gotShare ? "" :
                     <LongShortButtonContainer>
-                    <LongShortButton onClick={()=>{
+                    <LongShortButton style = {{ backgroundColor:this.getLongButtonStyleWhenClicked()}} onClick={()=>{
                       this.handleButtonClick('stockType','STOCK_LONG')
+                      this.handleButtonClick('longClicked',true)
+                      this.handleButtonClick('shortClicked',false)
+
                     }}>Long</LongShortButton>
 
-                    <LongShortButton onClick={()=>{
+                    <LongShortButton style={{backgroundColor: this.getShortButtonStyleWhenClicked()}} onClick={()=>{
                         this.handleButtonClick('stockType','STOCK_SHORT')
-                    }} disabled={true} style={{cursor:'no-drop'}}>Short</LongShortButton>
+                        this.handleButtonClick('shortClicked',true)
+                        this.handleButtonClick('longClicked',false)
+                    }}>Short</LongShortButton>
                 </LongShortButtonContainer>}
 
                 {!this.state.gotShare ? "" :
@@ -276,11 +292,18 @@ class OpenPosition extends React.Component{
                     <OpenButton onClick = {()=>{
                         this.openPosition()
                         this.props.setTrigger('OpenPositionTrigger',false)
-                    }} disabled={!this.state.stockSearch || !(this.state.shareAmount > 0)}>Open</OpenButton>
+                    }} disabled={!this.state.stockSearch || !(this.state.shareAmount > 0 ) || ((this.state.pricePerShare* this.state.shareAmount)>this.props.portfolio.balance)}>Open</OpenButton>
                 </OpenButtonContainer>}
 
             </BaseContainer>
         );
+    }
+
+    getLongButtonStyleWhenClicked(){
+        return this.state.longClicked ? 'rgba(255,255,255,0.8)' : 'rgba(255,173,78,0.8)'
+    }
+    getShortButtonStyleWhenClicked(){
+        return this.state.shortClicked ? 'rgba(255,255,255,0.8)' : 'rgba(255,173,78,0.8)'
     }
 
     async openPosition(){
@@ -310,20 +333,30 @@ class OpenPosition extends React.Component{
         const requestUrl = 'positions/' + this.state.stockSearch + '/more';
 
         this.setState({'isLoading':true})
-        const response = await api.get(requestUrl, {
+        try{
+            const response = await api.get(requestUrl, {
             headers: {
                 token: tempUser.token
             }
         });
+            console.log(response.data);
+            this.setState({'gotShare' :true});
+            this.setState({'pricePerShare': response.data.currentPrice});
+            this.setState({'dailyChange': response.data.changeFromLastClose});
+            this.setState({'lastDayClose': response.data.lastDayClose});
+            this.setState({'volume': response.data.lastDayVolume});
+        }
+        catch (e) {
+            this.setState({'isLoading':false})
+                alert('Please use a valid stock code. You can find here most of the global stock codes : https://www.nasdaq.com/market-activity/stocks/screener')
+
+        }
         this.setState({'isLoading':false})
 
-        console.log(response.data);
-        this.setState({'gotShare' :true});
-        this.setState({'pricePerShare': response.data.currentPrice});
-        this.setState({'dailyChange': response.data.changeFromLastClose});
-        this.setState({'lastDayClose': response.data.lastDayClose});
-        this.setState({'volume': response.data.lastDayVolume});
+
     }
+
+
 }
 
 export default withRouter(OpenPosition);
