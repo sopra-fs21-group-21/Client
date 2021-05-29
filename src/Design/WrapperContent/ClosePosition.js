@@ -14,6 +14,7 @@ const OverheadLabelContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin-bottom: 5%;
+  margin-top: 10%;
 `
 
 const OverheadLabel = styled(Label)`
@@ -89,17 +90,17 @@ class ClosePosition extends React.Component{
         return(
             <ClosePositionBaseContainer>
                 <OverheadLabelContainer>
-                    <OverheadLabel>amount of shares to close</OverheadLabel>
+                    <OverheadLabel>ARE YOU SURE YOU WANT TO CLOSE THIS POSITION ?!  </OverheadLabel>
                 </OverheadLabelContainer>
-                <AmountFieldContainer>
-                    <AmountField
-                        onChange = { e => {this.handleInputChange('amount',e.target.value);
-                        }}
-                    />
-                </AmountFieldContainer>
-                <AmountReturnedContainer>
-                    <AmountReturned>Realized Gain/Loss: </AmountReturned>
-                </AmountReturnedContainer>
+                {/*<AmountFieldContainer>*/}
+                {/*    <AmountField*/}
+                {/*        onChange = { e => {this.handleInputChange('amount',e.target.value);*/}
+                {/*        }}*/}
+                {/*    />*/}
+                {/*</AmountFieldContainer>*/}
+                {/*<AmountReturnedContainer>*/}
+                {/*    <AmountReturned>Realized Gain/Loss: </AmountReturned>*/}
+                {/*</AmountReturnedContainer>*/}
                 <ButtonContainer>
                     <ClosePositionButton onClick = {()=>{
                         this.closePositions()
