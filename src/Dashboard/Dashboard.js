@@ -166,6 +166,7 @@ class Dashboard extends React.Component{
             JoinPortTrigger: false,
             DropDownTrigger: false,
             SortingDropDownTrigger: false,
+            SortingDropDownTriggerLB: false,
             user: user,
             portfolioCode: null,
             createPortfolioName: null,
@@ -173,7 +174,10 @@ class Dashboard extends React.Component{
             allPublicPorts: null,
             displayCreatePortInfo: false,
             displayJoinPortInfo: false,
-            displayPortInfo:false
+            displayPortInfo:false,
+            totalPerClicked:false,
+            weeklyPerClicked:false,
+            balanceClicked:true,
 
         }
 
@@ -182,7 +186,7 @@ class Dashboard extends React.Component{
 
     async componentDidMount(){
         await this.getPortfolios();
-        await this.getAllPublicPortfolios();
+        await this.getAllPublicPortfolios("balance");
     }
 
     profile(){
@@ -327,8 +331,38 @@ class Dashboard extends React.Component{
                         <LeaderboardLabel>Leaderboard</LeaderboardLabel>
 
                         <PortfolioFormContainer>
+                            <SortMenuContainer onClick = {() => {
+                                this.handleButtonClick('SortingDropDownTriggerLB',!this.state.SortingDropDownTriggerLB)
+                            }}>
+                                <MenuItem/>
+                                <SortingPopUpWrapper trigger = {this.state.SortingDropDownTriggerLB} setTrigger={this.handleButtonClick}>
+                                    <MenuButton style={{backgroundColor: this.getBalanceButtonStyleWhenClicked()}} onClick={()=>{
+                                        this.handleButtonClick('totalPerClicked',false)
+                                        this.handleButtonClick('balanceClicked',true)
+                                        this.handleButtonClick('weeklyPerClicked',false)
+                                        this.getAllPublicPortfolios('balance')
+
+                                    }} >Balance</MenuButton>
+
+                                    <MenuButton style={{backgroundColor: this.getWeeklyPerButtonStyleWhenClicked()}} onClick={()=>{
+                                        this.handleButtonClick('totalPerClicked',false)
+                                        this.handleButtonClick('weeklyPerClicked',true)
+                                        this.handleButtonClick('balanceClicked',false)
+                                        this.getAllPublicPortfolios('weekly')
+
+                                    }}>Weekly Performance</MenuButton>
+
+                                    <MenuButton style={{backgroundColor: this.getTotalPerButtonStyleWhenClicked()}} onClick={()=>{
+                                        this.handleButtonClick('weeklyPerClicked',false)
+                                        this.handleButtonClick('totalPerClicked',true)
+                                        this.handleButtonClick('balanceClicked',false)
+                                        this.getAllPublicPortfolios('total')
+                                    }}>Total Performance</MenuButton>
+                                </SortingPopUpWrapper>
+                            </SortMenuContainer>
+
                             {this.state.portfolios !== null && this.state.portfolios.length > 0 ?
-                            <Label style={{color:'#D86969', fontWeight:'700'}}>THIS LEADERBOARD CONTAINS ALL AVAILABLE PUBLIC PORTFOLIOS, SORTED BY BALANCE: </Label>
+                            <Label style={{color:'#D86969', fontWeight:'700'}}>THIS LEADERBOARD CONTAINS ALL AVAILABLE PUBLIC PORTFOLIOS, SORTED BY {this.state.weeklyPerClicked ? <p style={{ display: 'inline-block'}}>WEEKLY PERFORMANCE</p> : this.state.totalPerClicked ? <p style={{ display: 'inline-block'}}>TOTAL PERFORMANCE</p> : <p style={{ display: 'inline-block'}}>BALANCE</p>  }: </Label>
                                 : <Label style={{color:'#D86969', fontWeight:'700'}}>CREATE A PUBLIC PORTFOLIO TO DISPLAY IN THE LEADERBOARD</Label>}
 
 
@@ -426,7 +460,7 @@ class Dashboard extends React.Component{
             this.setState({portfolios: []});
 
             this.getPortfolios()
-            this.getAllPublicPortfolios()
+            this.getAllPublicPortfolios("balance")
         }
 
         catch(error){
@@ -453,13 +487,13 @@ class Dashboard extends React.Component{
         }
     }
 
-    async getAllPublicPortfolios(){
+    async getAllPublicPortfolios(sorting){
         try {
 
             const response = await api.get(`/portfolios/`, {
                 headers: {
                     token: this.state.user.token,
-                    sort: "balance"
+                    sort: sorting
                 }
             });
 
@@ -469,6 +503,16 @@ class Dashboard extends React.Component{
         catch(error){
             alert(error.response.data.message)
         }
+    }
+
+    getTotalPerButtonStyleWhenClicked(){
+        return this.state.totalPerClicked ? 'rgba(255,255,255,0.8)' : 'rgba(255,173,78,0.8)'
+    }
+    getWeeklyPerButtonStyleWhenClicked(){
+        return this.state.weeklyPerClicked ? 'rgba(255,255,255,0.8)' : 'rgba(255,173,78,0.8)'
+    }
+    getBalanceButtonStyleWhenClicked(){
+        return this.state.balanceClicked ? 'rgba(255,255,255,0.8)' : 'rgba(255,173,78,0.8)'
     }
 }
 
