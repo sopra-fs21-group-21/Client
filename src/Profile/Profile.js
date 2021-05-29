@@ -186,6 +186,9 @@ const CreatePortfolioButton = styled(Button)`
   &:hover {
   cursor: pointer;
   }
+  :disabled{
+    cursor: no-drop;
+  }
 `
 
 
@@ -570,7 +573,7 @@ class Profile extends React.Component{
                             {/**Create and Join Port Wrappers**/}
                             <CreatePortfolioWrapper trigger={this.state.CreatePortTrigger} setTrigger={this.handleButtonClick}>
                                 <br/>
-                                <Label700>Portfolio Name:</Label700>
+                                <Label700 style={{color:'white'}}>Portfolio Name:</Label700>
                                 <br/>
                                 <CreatePortfolioInput onChange={e => {
                                     this.handleButtonClick('createPortfolioName',e.target.value)
@@ -589,15 +592,15 @@ class Profile extends React.Component{
                                     }}><Label700>Shared</Label700></CreatePortfolioButton>
                                 </CreatePortfolioMidContainer>
                                 <br/>
-                                <CreatePortfolioButton onClick ={()=>{
+                                <CreatePortfolioButton disabled={!this.state.createPortfolioName} onClick ={()=>{
                                     this.createPortfolio()
-                                }}><Label700>+Create Portfolio</Label700></CreatePortfolioButton>
+                                }}>+Create Portfolio</CreatePortfolioButton>
                                 <br/>
                             </CreatePortfolioWrapper>
 
                             <JoinPortfolioWrapper trigger = {this.state.JoinPortTrigger} setTrigger = {this.handleButtonClick}>
                                 <br/>
-                                <Label>Portfolio Code:</Label>
+                                <Label700 style={{color:'white'}}>Portfolio Code:</Label700>
                                 <br/>
                                 <CreatePortfolioInput onChange={e => {
                                     this.handleButtonClick('portfolioCode', e.target.value);
@@ -642,7 +645,9 @@ class Profile extends React.Component{
             }
         });
             this.handleButtonClick('JoinPortTrigger',false)
-            this.handleButtonClick('portfolioCode',null)}
+            this.handleButtonClick('portfolioCode',null)
+            this.getPortfolios()
+        }
         catch (error){
             alert(error.response.data.message)
         }
