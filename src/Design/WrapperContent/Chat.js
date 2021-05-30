@@ -73,7 +73,8 @@ class Chat extends React.Component{
 
         this.state = {
             message: '',
-            messageList: []
+            messageList: [],
+            intervalID: 0
         }
         this.handleSubmit=this.handleSubmit.bind(this);
         this.refreshChat=this.refreshChat.bind(this);
@@ -87,10 +88,12 @@ class Chat extends React.Component{
 
     componentDidMount(){
         console.log(this.props.portfolio.id)
-        const myInterval = setInterval(this.refreshChat, 1000);
+        this.state.intervalID = setInterval(this.refreshChat, 1000);
     }
 
-
+    componentWillUnmount(){
+        clearInterval(this.state.intervalID);
+    }
 
     async sendMessage(){
 
