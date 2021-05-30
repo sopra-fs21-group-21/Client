@@ -84,13 +84,14 @@ would be nice to include markets from the rest of the world (though data is scar
 
 * Alessandro Vanzo - [@Alessandro](http://github.com/alessandrovanzo)
 * Karim Khamaisi   - [@Karim](http://github.com/Karimkh31)
+* Krzysztof Wroblewski   - [@Krzysztof](http://github.com/krwro)
 
 
 ## License
 
 MIT License
 
-Copyright (c) [2021] [Alessandro Vanzo]
+Copyright (c) [2021] [Alessandro Vanzo, Krzysztof Wroblewski]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
